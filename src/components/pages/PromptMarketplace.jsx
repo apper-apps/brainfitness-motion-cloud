@@ -1,31 +1,36 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
-import ApperIcon from '@/components/ApperIcon';
-import Button from '@/components/atoms/Button';
-import Input from '@/components/atoms/Input';
-import Card from '@/components/atoms/Card';
-import Badge from '@/components/atoms/Badge';
-import Loading from '@/components/ui/Loading';
-import Error from '@/components/ui/Error';
-import MarketplaceCard from '@/components/molecules/MarketplaceCard';
-import { promptService } from '@/services/api/promptService';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { promptService } from "@/services/api/promptService";
+import ApperIcon from "@/components/ApperIcon";
+import MarketplaceCard from "@/components/molecules/MarketplaceCard";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import Badge from "@/components/atoms/Badge";
+import Input from "@/components/atoms/Input";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 
 const PromptMarketplace = () => {
+const [activeTab, setActiveTab] = useState('prompts');
   const [prompts, setPrompts] = useState([]);
+  const [promptPacks, setPromptPacks] = useState([]);
   const [filteredPrompts, setFilteredPrompts] = useState([]);
+  const [filteredPacks, setFilteredPacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedPrompt, setSelectedPrompt] = useState(null);
+  const [selectedPack, setSelectedPack] = useState(null);
   const [purchasing, setPurchasing] = useState(false);
   
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [priceRange, setPriceRange] = useState([0, 10]);
+  const [priceRange, setPriceRange] = useState([0, 25]);
   const [sortBy, setSortBy] = useState('featured');
 
-  const categories = ['All', 'Business Strategy', 'Creative Writing', 'Technology', 'Marketing', 'Education'];
+  const categories = ['All', 'Business Strategy', 'Creative Writing', 'Technology', 'Marketing', 'Education', 'Memory Enhancement', 'Focus Training', 'Problem Solving'];
+  const packCategories = ['All', 'Memory Enhancement', 'Focus Training', 'Problem Solving', 'Creative Thinking', 'Decision Making'];
   const sortOptions = [
     { value: 'featured', label: 'Featured' },
     { value: 'newest', label: 'Newest' },
@@ -36,18 +41,22 @@ const PromptMarketplace = () => {
   ];
 
   useEffect(() => {
-    loadPrompts();
+loadData();
   }, []);
 
   useEffect(() => {
     applyFilters();
-  }, [prompts, searchTerm, selectedCategory, priceRange, sortBy]);
+  }, [prompts, promptPacks, searchTerm, selectedCategory, priceRange, sortBy, activeTab]);
 
-  const loadPrompts = async () => {
+  const loadData = async () => {
     try {
       setLoading(true);
-      const data = await promptService.getMarketplacePrompts();
-      setPrompts(data);
+      const [promptsData, packsData] = await Promise.all([
+        promptService.getMarketplacePrompts(),
+        promptService.getPromptPacks()
+      ]);
+      setPrompts(promptsData);
+      setPromptPacks(packsData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -64,14 +73,19 @@ const PromptMarketplace = () => {
         sortBy
       };
       
-      const filtered = await promptService.getMarketplacePrompts(filters);
-      setFilteredPrompts(filtered);
+      if (activeTab === 'prompts') {
+        const filtered = await promptService.getMarketplacePrompts(filters);
+        setFilteredPrompts(filtered);
+      } else {
+        const filtered = await promptService.getPromptPacks(filters);
+        setFilteredPacks(filtered);
+      }
     } catch (err) {
       console.error('Filter error:', err);
     }
   };
 
-  const handlePurchase = async (prompt) => {
+const handlePurchase = async (item, isPack = false) => {
     try {
       setPurchasing(true);
       
@@ -81,13 +95,25 @@ const PromptMarketplace = () => {
         card: 'pm_card_visa' // Mock payment method
       };
       
-      const purchase = await promptService.purchasePrompt(prompt.Id, paymentMethod);
-      setSelectedPrompt(null);
+      const purchase = isPack 
+        ? await promptService.purchasePromptPack(item.Id, paymentMethod)
+        : await promptService.purchasePrompt(item.Id, paymentMethod);
       
-      // Update prompt sales count in local state
-      setPrompts(prev => prev.map(p => 
-        p.Id === prompt.Id ? { ...p, totalSales: p.totalSales + 1 } : p
-      ));
+      setSelectedPrompt(null);
+      setSelectedPack(null);
+      
+      // Update sales count in local state
+      if (isPack) {
+        setPromptPacks(prev => prev.map(p => 
+          p.Id === item.Id ? { ...p, totalSales: p.totalSales + 1 } : p
+        ));
+        toast.success(`${item.title} pack purchased successfully! Check your downloads.`);
+      } else {
+        setPrompts(prev => prev.map(p => 
+          p.Id === item.Id ? { ...p, totalSales: p.totalSales + 1 } : p
+        ));
+        toast.success(`${item.title} purchased successfully!`);
+      }
       
     } catch (err) {
       toast.error(err.message);
@@ -96,10 +122,9 @@ const PromptMarketplace = () => {
     }
   };
 
-  if (loading) return <Loading />;
-  if (error) return <Error message={error} onRetry={loadPrompts} />;
-
-  return (
+if (loading) return <Loading />;
+  if (error) return <Error message={error} onRetry={loadData} />;
+return (
     <div className="p-6 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
@@ -109,7 +134,7 @@ const PromptMarketplace = () => {
           </div>
           <div>
             <h1 className="text-3xl font-bold text-gray-900 font-display">Prompt Marketplace</h1>
-            <p className="text-gray-600 font-body">Discover battle-tested prompts from top creators</p>
+            <p className="text-gray-600 font-body">Discover battle-tested prompts and curated brain fitness packs</p>
           </div>
         </div>
         
@@ -117,20 +142,48 @@ const PromptMarketplace = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card className="p-4 text-center">
             <div className="text-2xl font-bold text-primary">{prompts.length}</div>
-            <div className="text-sm text-gray-600">Available Prompts</div>
+            <div className="text-sm text-gray-600">Individual Prompts</div>
           </Card>
           <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-accent">{prompts.reduce((sum, p) => sum + p.totalSales, 0)}</div>
+            <div className="text-2xl font-bold text-accent">{promptPacks.length}</div>
+            <div className="text-sm text-gray-600">Prompt Packs</div>
+          </Card>
+          <Card className="p-4 text-center">
+            <div className="text-2xl font-bold text-success">{prompts.reduce((sum, p) => sum + p.totalSales, 0) + promptPacks.reduce((sum, p) => sum + p.totalSales, 0)}</div>
             <div className="text-sm text-gray-600">Total Sales</div>
           </Card>
           <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-success">{prompts.filter(p => p.featured).length}</div>
-            <div className="text-sm text-gray-600">Featured</div>
+            <div className="text-2xl font-bold text-info">{prompts.filter(p => p.featured).length + promptPacks.filter(p => p.featured).length}</div>
+            <div className="text-sm text-gray-600">Featured Items</div>
           </Card>
-          <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-info">{categories.length - 1}</div>
-            <div className="text-sm text-gray-600">Categories</div>
-          </Card>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="mb-8">
+        <div className="flex space-x-1 bg-gray-100 p-1 rounded-xl">
+          <button
+            onClick={() => setActiveTab('prompts')}
+            className={`flex-1 px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+              activeTab === 'prompts'
+                ? 'bg-white text-primary shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <ApperIcon name="FileText" size={16} className="mr-2 inline" />
+            Individual Prompts
+          </button>
+          <button
+            onClick={() => setActiveTab('packs')}
+            className={`flex-1 px-6 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+              activeTab === 'packs'
+                ? 'bg-white text-primary shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <ApperIcon name="Package" size={16} className="mr-2 inline" />
+            Prompt Packs
+          </button>
         </div>
       </div>
 
@@ -143,7 +196,7 @@ const PromptMarketplace = () => {
             <div className="relative">
               <ApperIcon name="Search" size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input
-                placeholder="Search prompts..."
+                placeholder={activeTab === 'prompts' ? "Search prompts..." : "Search packs..."}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -159,7 +212,7 @@ const PromptMarketplace = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
             >
-              {categories.map(cat => (
+              {(activeTab === 'prompts' ? categories : packCategories).map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
@@ -173,7 +226,7 @@ const PromptMarketplace = () => {
             <input
               type="range"
               min="0"
-              max="10"
+              max={activeTab === 'prompts' ? "10" : "25"}
               step="0.5"
               value={priceRange[1]}
               onChange={(e) => setPriceRange([0, parseFloat(e.target.value)])}
@@ -197,26 +250,109 @@ const PromptMarketplace = () => {
         </div>
       </Card>
 
-      {/* Prompts Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredPrompts.map((prompt) => (
-          <MarketplaceCard
-            key={prompt.Id}
-            prompt={prompt}
-            onPurchase={() => setSelectedPrompt(prompt)}
-          />
-        ))}
-      </div>
+      {/* Content Grid */}
+      {activeTab === 'prompts' ? (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredPrompts.map((prompt) => (
+              <MarketplaceCard
+                key={prompt.Id}
+                prompt={prompt}
+                onPurchase={() => setSelectedPrompt(prompt)}
+              />
+            ))}
+          </div>
 
-      {filteredPrompts.length === 0 && (
-        <div className="text-center py-12">
-          <ApperIcon name="Search" size={48} className="text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No prompts found</h3>
-          <p className="text-gray-600">Try adjusting your filters or search terms</p>
-        </div>
+          {filteredPrompts.length === 0 && (
+            <div className="text-center py-12">
+              <ApperIcon name="Search" size={48} className="text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No prompts found</h3>
+              <p className="text-gray-600">Try adjusting your filters or search terms</p>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredPacks.map((pack) => (
+              <Card key={pack.Id} className="p-6 hover:shadow-lg transition-shadow duration-200">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
+                      <ApperIcon name="Package" size={24} className="text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">{pack.title}</h3>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant={pack.tier === 'basic' ? 'info' : pack.tier === 'premium' ? 'accent' : 'primary'}>
+                          {pack.tier.charAt(0).toUpperCase() + pack.tier.slice(1)}
+                        </Badge>
+                        {pack.featured && <Badge variant="success">Featured</Badge>}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-primary">${pack.price}</div>
+                    <div className="text-sm text-gray-500">{pack.promptCount} prompts</div>
+                  </div>
+                </div>
+
+                <p className="text-gray-600 mb-4">{pack.description}</p>
+
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Prompts:</span>
+                    <span className="font-medium">{pack.promptCount}</span>
+                  </div>
+                  {pack.includesTemplates && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Templates:</span>
+                      <ApperIcon name="Check" size={16} className="text-success" />
+                    </div>
+                  )}
+                  {pack.includesGuides && (
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Usage Guides:</span>
+                      <ApperIcon name="Check" size={16} className="text-success" />
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Rating:</span>
+                    <div className="flex items-center space-x-1">
+                      <ApperIcon name="Star" size={14} className="text-accent fill-current" />
+                      <span className="font-medium">{pack.rating}</span>
+                      <span className="text-gray-500">({pack.reviews})</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Sales:</span>
+                    <span className="font-medium">{pack.totalSales}</span>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => setSelectedPack(pack)}
+                  className="w-full"
+                  variant={pack.tier === 'premium' ? 'accent' : 'primary'}
+                >
+                  <ApperIcon name="Package" size={16} className="mr-2" />
+                  Purchase Pack
+                </Button>
+              </Card>
+            ))}
+          </div>
+
+          {filteredPacks.length === 0 && (
+            <div className="text-center py-12">
+              <ApperIcon name="Package" size={48} className="text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No prompt packs found</h3>
+              <p className="text-gray-600">Try adjusting your filters or search terms</p>
+            </div>
+          )}
+        </>
       )}
 
-      {/* Purchase Modal */}
+{/* Purchase Modal - Individual Prompt */}
       {selectedPrompt && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <motion.div
@@ -273,7 +409,7 @@ const PromptMarketplace = () => {
                   Cancel
                 </Button>
                 <Button
-                  onClick={() => handlePurchase(selectedPrompt)}
+                  onClick={() => handlePurchase(selectedPrompt, false)}
                   disabled={purchasing}
                   className="flex-1"
                 >
@@ -286,6 +422,143 @@ const PromptMarketplace = () => {
                     <>
                       <ApperIcon name="CreditCard" size={16} className="mr-2" />
                       Purchase Now
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Purchase Modal - Prompt Pack */}
+      {selectedPack && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-gray-900">Purchase Prompt Pack</h3>
+                <button
+                  onClick={() => setSelectedPack(null)}
+                  className="p-2 text-gray-400 hover:text-gray-600"
+                >
+                  <ApperIcon name="X" size={20} />
+                </button>
+              </div>
+              
+              <div className="mb-6">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
+                    <ApperIcon name="Package" size={32} className="text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-900">{selectedPack.title}</h4>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <Badge variant={selectedPack.tier === 'basic' ? 'info' : selectedPack.tier === 'premium' ? 'accent' : 'primary'}>
+                        {selectedPack.tier.charAt(0).toUpperCase() + selectedPack.tier.slice(1)} Pack
+                      </Badge>
+                      <Badge variant="success">{selectedPack.promptCount} Prompts</Badge>
+                    </div>
+                  </div>
+                </div>
+                
+                <p className="text-gray-600 mb-6">{selectedPack.description}</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="space-y-4">
+                    <h5 className="font-semibold text-gray-900">What's Included:</h5>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <ApperIcon name="Check" size={16} className="text-success" />
+                        <span className="text-sm">{selectedPack.promptCount} battle-tested prompts</span>
+                      </div>
+                      {selectedPack.includesTemplates && (
+                        <div className="flex items-center space-x-2">
+                          <ApperIcon name="Check" size={16} className="text-success" />
+                          <span className="text-sm">Customizable templates</span>
+                        </div>
+                      )}
+                      {selectedPack.includesGuides && (
+                        <div className="flex items-center space-x-2">
+                          <ApperIcon name="Check" size={16} className="text-success" />
+                          <span className="text-sm">Usage guides & best practices</span>
+                        </div>
+                      )}
+                      <div className="flex items-center space-x-2">
+                        <ApperIcon name="Check" size={16} className="text-success" />
+                        <span className="text-sm">Instant download</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <ApperIcon name="Check" size={16} className="text-success" />
+                        <span className="text-sm">Workout integration suggestions</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h5 className="font-semibold text-gray-900">Pack Stats:</h5>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-center p-3 bg-gray-50 rounded-lg">
+                        <div className="text-lg font-bold text-primary">{selectedPack.efficacyRating}%</div>
+                        <div className="text-xs text-gray-600">Efficacy Rating</div>
+                      </div>
+                      <div className="text-center p-3 bg-gray-50 rounded-lg">
+                        <div className="text-lg font-bold text-accent">{selectedPack.totalSales}</div>
+                        <div className="text-xs text-gray-600">Total Sales</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <ApperIcon name="Star" size={16} className="text-accent fill-current" />
+                        <span className="text-sm font-medium">{selectedPack.rating} ({selectedPack.reviews} reviews)</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 p-4 rounded-lg mb-6">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <ApperIcon name="Lightbulb" size={16} className="text-blue-600" />
+                    <h5 className="font-medium text-blue-900">Workout Integration</h5>
+                  </div>
+                  <p className="text-sm text-blue-800">{selectedPack.workoutIntegration}</p>
+                </div>
+                
+                <div className="flex items-center justify-between mb-6">
+                  <div className="text-sm text-gray-600">
+                    Value: <span className="line-through">${(selectedPack.promptCount * 2.99).toFixed(2)}</span>
+                  </div>
+                  <div className="text-3xl font-bold text-primary">${selectedPack.price}</div>
+                </div>
+              </div>
+              
+              <div className="flex space-x-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setSelectedPack(null)}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => handlePurchase(selectedPack, true)}
+                  disabled={purchasing}
+                  className="flex-1"
+                  variant={selectedPack.tier === 'premium' ? 'accent' : 'primary'}
+                >
+                  {purchasing ? (
+                    <>
+                      <ApperIcon name="Loader2" size={16} className="animate-spin mr-2" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <ApperIcon name="CreditCard" size={16} className="mr-2" />
+                      Purchase Pack
                     </>
                   )}
                 </Button>

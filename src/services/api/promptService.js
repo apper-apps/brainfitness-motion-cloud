@@ -144,6 +144,125 @@ const marketplacePrompts = [
   }
 ];
 
+// Prompt Packs for Brain Fitness
+const promptPacks = [
+  {
+    Id: 1,
+    title: "Memory Boost Pack",
+    description: "10 scientifically-backed prompts designed to enhance memory retention and recall through targeted cognitive exercises.",
+    price: 9.99,
+    tier: 'standard',
+    promptCount: 10,
+    category: 'Memory Enhancement',
+    featured: true,
+    includesTemplates: true,
+    includesGuides: true,
+    rating: 4.8,
+    reviews: 124,
+    totalSales: 87,
+    efficacyRating: 94,
+    workoutIntegration: "Perfect for Daily Thinking Sessions focused on memory improvement. Use before important learning sessions.",
+    createdAt: '2024-01-15',
+    prompts: [
+      "Create a detailed mental map of [topic] with interconnected concepts and visual anchors for enhanced recall.",
+      "Design a memory palace for [subject] using familiar locations and vivid imagery associations.",
+      "Generate mnemonic devices for [information] using the Method of Loci technique.",
+      // ... 7 more prompts
+    ]
+  },
+  {
+    Id: 2,
+    title: "Focus Amplifier Pack",
+    description: "15 premium prompts to sharpen concentration and eliminate mental distractions for peak performance.",
+    price: 14.99,
+    tier: 'premium',
+    promptCount: 15,
+    category: 'Focus Training',
+    featured: true,
+    includesTemplates: true,
+    includesGuides: true,
+    rating: 4.9,
+    reviews: 98,
+    totalSales: 63,
+    efficacyRating: 96,
+    workoutIntegration: "Ideal for Mental Clarity Trainer sessions when you need sustained attention for complex tasks.",
+    createdAt: '2024-01-20',
+    prompts: [
+      "Create a focused attention protocol for [task] that eliminates distractions and maintains flow state.",
+      "Design a concentration exercise that progressively builds mental stamina for [duration] minutes.",
+      // ... 13 more prompts
+    ]
+  },
+  {
+    Id: 3,
+    title: "Problem Solver Starter",
+    description: "5 essential prompts for systematic problem-solving and creative thinking breakthroughs.",
+    price: 4.99,
+    tier: 'basic',
+    promptCount: 5,
+    category: 'Problem Solving',
+    featured: false,
+    includesTemplates: false,
+    includesGuides: true,
+    rating: 4.6,
+    reviews: 156,
+    totalSales: 142,
+    efficacyRating: 89,
+    workoutIntegration: "Great starting point for any workout session involving analytical thinking or decision making.",
+    createdAt: '2024-01-10',
+    prompts: [
+      "Break down [complex problem] into manageable components using systematic analysis.",
+      "Generate multiple solution pathways for [challenge] using lateral thinking techniques.",
+      // ... 3 more prompts
+    ]
+  },
+  {
+    Id: 4,
+    title: "Creative Genius Bundle",
+    description: "25 advanced prompts for unleashing creative potential with templates and comprehensive guides.",
+    price: 19.99,
+    tier: 'premium',
+    promptCount: 25,
+    category: 'Creative Thinking',
+    featured: true,
+    includesTemplates: true,
+    includesGuides: true,
+    rating: 4.9,
+    reviews: 89,
+    totalSales: 45,
+    efficacyRating: 97,
+    workoutIntegration: "Perfect for brainstorming sessions and creative problem-solving workouts. Combines well with any exercise.",
+    createdAt: '2024-01-25',
+    prompts: [
+      "Generate innovative solutions for [challenge] using SCAMPER methodology and creative constraints.",
+      "Create unexpected connections between [concept A] and [concept B] to spark breakthrough insights.",
+      // ... 23 more prompts
+    ]
+  },
+  {
+    Id: 5,
+    title: "Decision Master Pack",
+    description: "12 strategic prompts for making better decisions under pressure with confidence and clarity.",
+    price: 12.99,
+    tier: 'standard',
+    promptCount: 12,
+    category: 'Decision Making',
+    featured: false,
+    includesTemplates: true,
+    includesGuides: true,
+    rating: 4.7,
+    reviews: 67,
+    totalSales: 78,
+    efficacyRating: 92,
+    workoutIntegration: "Essential for leadership workouts and strategic thinking sessions. Use when facing important choices.",
+    createdAt: '2024-01-18',
+    prompts: [
+      "Evaluate [decision] using a structured framework that weighs risks, benefits, and long-term consequences.",
+      "Create a decision matrix for [options] that considers multiple criteria and stakeholder perspectives.",
+      // ... 10 more prompts
+    ]
+  }
+];
 // Mental Clarity Breathing Exercises
 const breathingExercises = [
   {
@@ -213,7 +332,8 @@ class PromptService {
     this.clarityExercises = [...breathingExercises];
     this.claritySessions = this.loadClaritySessions();
     this.clarityHistory = this.loadClarityHistory();
-    this.marketplacePrompts = [...marketplacePrompts];
+this.marketplacePrompts = [...marketplacePrompts];
+    this.promptPacks = [...promptPacks];
     this.userPurchases = this.loadUserPurchases();
     this.sellerListings = this.loadSellerListings();
     this.stripeLoaded = this.loadStripe();
@@ -359,7 +479,7 @@ class PromptService {
     };
   }
 
-  async getDailyRecommendation(isPremium = false) {
+async getDailyRecommendation(isPremium = false) {
     await this.delay();
     const history = this.clarityHistory;
     const stats = await this.getClarityStats();
@@ -398,6 +518,191 @@ class PromptService {
     };
 
     return recommendation;
+  }
+
+  // Prompt Packs API Methods
+  async getPromptPacks(filters = {}) {
+    await this.delay();
+    let packs = [...this.promptPacks];
+
+    // Apply filters
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase();
+      packs = packs.filter(pack => 
+        pack.title.toLowerCase().includes(searchTerm) ||
+        pack.description.toLowerCase().includes(searchTerm) ||
+        pack.category.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    if (filters.category && filters.category !== 'All') {
+      packs = packs.filter(pack => pack.category === filters.category);
+    }
+
+    if (filters.priceRange) {
+      packs = packs.filter(pack => 
+        pack.price >= filters.priceRange[0] && pack.price <= filters.priceRange[1]
+      );
+    }
+
+    // Apply sorting
+    switch (filters.sortBy) {
+      case 'newest':
+        packs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+      case 'price-low':
+        packs.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        packs.sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        packs.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'sales':
+        packs.sort((a, b) => b.totalSales - a.totalSales);
+        break;
+      case 'featured':
+      default:
+        packs.sort((a, b) => {
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          return b.rating - a.rating;
+        });
+        break;
+    }
+
+    return packs;
+  }
+
+  async getPromptPackById(id) {
+    await this.delay();
+    const pack = this.promptPacks.find(p => p.Id === parseInt(id));
+    if (!pack) {
+      throw new Error('Prompt pack not found');
+    }
+    return { ...pack };
+  }
+
+  async purchasePromptPack(packId, paymentMethod) {
+    await this.delay(1000);
+    
+    const pack = this.promptPacks.find(p => p.Id === parseInt(packId));
+    if (!pack) {
+      throw new Error('Prompt pack not found');
+    }
+
+    // Simulate Stripe payment processing
+    const stripeResult = await this.processStripePayment(pack.price, paymentMethod);
+    
+    if (!stripeResult.success) {
+      throw new Error('Payment failed. Please try again.');
+    }
+
+    // Create purchase record
+    const purchase = {
+      Id: Date.now(),
+      packId: pack.Id,
+      packTitle: pack.title,
+      amount: pack.price,
+      paymentId: stripeResult.paymentId,
+      purchaseDate: new Date().toISOString(),
+      type: 'pack',
+      downloadUrls: pack.prompts.map((prompt, index) => ({
+        promptId: `${pack.Id}_${index + 1}`,
+        title: `Prompt ${index + 1}`,
+        content: prompt,
+        downloadUrl: `https://api.brainfitness.ai/downloads/pack_${pack.Id}_prompt_${index + 1}.txt`
+      })),
+      templates: pack.includesTemplates ? [
+        {
+          title: 'Customization Template',
+          downloadUrl: `https://api.brainfitness.ai/downloads/pack_${pack.Id}_template.pdf`
+        }
+      ] : [],
+      guides: pack.includesGuides ? [
+        {
+          title: 'Usage Guide',
+          downloadUrl: `https://api.brainfitness.ai/downloads/pack_${pack.Id}_guide.pdf`
+        }
+      ] : []
+    };
+
+    // Add to user purchases
+    this.userPurchases.push(purchase);
+    this.saveUserPurchases();
+
+    // Update pack sales count
+    pack.totalSales += 1;
+
+    toast.success(`${pack.title} purchased successfully! Downloads are ready.`);
+    return purchase;
+  }
+
+  async getPackWorkoutSuggestions(packId) {
+    await this.delay();
+    const pack = this.promptPacks.find(p => p.Id === parseInt(packId));
+    if (!pack) {
+      throw new Error('Prompt pack not found');
+    }
+
+    // Generate workout integration suggestions based on pack category
+    const suggestions = {
+      'Memory Enhancement': [
+        {
+          workoutType: 'Daily Thinking Session',
+          suggestion: 'Use memory prompts before learning new information to improve retention by up to 40%.',
+          timing: 'Start of session',
+          duration: '5-10 minutes'
+        },
+        {
+          workoutType: 'Mental Clarity Trainer',
+          suggestion: 'Combine with breathing exercises to enhance memory consolidation during focus breaks.',
+          timing: 'Mid-session break',
+          duration: '3-5 minutes'
+        }
+      ],
+      'Focus Training': [
+        {
+          workoutType: 'Mental Clarity Trainer',
+          suggestion: 'Perfect for sustained attention tasks. Use these prompts to maintain deep focus for longer periods.',
+          timing: 'Throughout session',
+          duration: '15-30 minutes'
+        },
+        {
+          workoutType: 'Daily Thinking Session',
+          suggestion: 'Ideal for complex problem-solving that requires uninterrupted concentration.',
+          timing: 'Peak focus time',
+          duration: '20-45 minutes'
+        }
+      ],
+      'Problem Solving': [
+        {
+          workoutType: 'Daily Thinking Session',
+          suggestion: 'Use these prompts when facing challenging decisions or complex analytical tasks.',
+          timing: 'Start of session',
+          duration: '10-20 minutes'
+        }
+      ],
+      'Creative Thinking': [
+        {
+          workoutType: 'Daily Thinking Session',
+          suggestion: 'Perfect for brainstorming and innovative problem-solving sessions.',
+          timing: 'Peak creativity time',
+          duration: '15-60 minutes'
+        }
+      ],
+      'Decision Making': [
+        {
+          workoutType: 'Daily Thinking Session',
+          suggestion: 'Use when facing important choices or strategic planning sessions.',
+          timing: 'Start of session',
+          duration: '10-30 minutes'
+        }
+      ]
+    };
+
+    return suggestions[pack.category] || [];
   }
 
 // Marketplace Methods
@@ -444,7 +749,7 @@ class PromptService {
     }
     
     return prompts;
-  }
+}
 
   async getPromptById(id) {
     await this.delay();
@@ -492,8 +797,7 @@ class PromptService {
     } else {
       throw new Error(paymentResult.error || 'Payment failed');
     }
-  }
-
+}
   async getUserPurchases() {
     await this.delay();
     return [...this.userPurchases];
@@ -599,7 +903,7 @@ class PromptService {
     }
   }
 
-  async processSellePayout(sellerId, amount) {
+async processSellePayout(sellerId, amount) {
     // Simulate automated payout processing
     await this.delay(500);
     
@@ -617,6 +921,30 @@ class PromptService {
     
     // In real app, save to payouts collection
     return payout;
+  }
+
+  // Analytics for prompt packs
+  async getPackAnalytics() {
+    await this.delay();
+    
+    const totalPackSales = this.promptPacks.reduce((sum, pack) => sum + pack.totalSales, 0);
+    const totalPackRevenue = this.promptPacks.reduce((sum, pack) => sum + (pack.totalSales * pack.price), 0);
+    const avgPackRating = this.promptPacks.reduce((sum, pack) => sum + pack.rating, 0) / this.promptPacks.length;
+    
+    return {
+      totalPacks: this.promptPacks.length,
+      totalPackSales,
+      totalPackRevenue,
+      avgPackRating: Math.round(avgPackRating * 10) / 10,
+      topSellingPack: this.promptPacks.reduce((max, pack) => 
+        pack.totalSales > (max?.totalSales || 0) ? pack : max, null
+      ),
+      packsByTier: {
+        basic: this.promptPacks.filter(p => p.tier === 'basic').length,
+        standard: this.promptPacks.filter(p => p.tier === 'standard').length,
+        premium: this.promptPacks.filter(p => p.tier === 'premium').length
+      }
+    };
   }
 
   // Existing AI Trainer methods...
