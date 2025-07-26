@@ -15,6 +15,7 @@ const navigationItems = [
     { name: "Mental Clarity", path: "/clarity-trainer", icon: "Focus" },
     { name: "Prompt Market", path: "/prompt-market", icon: "Store" },
     { name: "Seller Dashboard", path: "/seller-dashboard", icon: "DollarSign" },
+    { name: "Community", path: "/community", icon: "Users" },
     { name: "Progress", path: "/progress", icon: "TrendingUp" },
     { name: "Achievements", path: "/achievements", icon: "Award" },
     { name: "Settings", path: "/settings", icon: "Settings" }

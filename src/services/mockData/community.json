@@ -1,0 +1,62 @@
+[
+  {
+    "Id": 1,
+    "name": "General Discussion",
+    "description": "Share your brain training journey and general thoughts",
+    "icon": "MessageCircle",
+    "color": "primary",
+    "postCount": 127,
+    "memberCount": 89,
+    "lastActivity": "2024-01-15T10:30:00Z",
+    "lastPost": {
+      "title": "Just completed my 30-day streak!",
+      "author": "Sarah Chen",
+      "timestamp": "2024-01-15T10:30:00Z"
+    }
+  },
+  {
+    "Id": 2,
+    "name": "Progress Sharing",
+    "description": "Share your achievements and celebrate milestones together",
+    "icon": "TrendingUp",
+    "color": "success",
+    "postCount": 203,
+    "memberCount": 156,
+    "lastActivity": "2024-01-15T09:45:00Z",
+    "lastPost": {
+      "title": "Mental clarity score improved by 40%!",
+      "author": "Alex Rodriguez",
+      "timestamp": "2024-01-15T09:45:00Z"
+    }
+  },
+  {
+    "Id": 3,
+    "name": "Exercise Tips & Strategies",
+    "description": "Share techniques and strategies for better brain training",
+    "icon": "Brain",
+    "color": "secondary",
+    "postCount": 89,
+    "memberCount": 78,
+    "lastActivity": "2024-01-15T08:20:00Z",
+    "lastPost": {
+      "title": "Best time of day for memory exercises?",
+      "author": "David Kim",
+      "timestamp": "2024-01-15T08:20:00Z"
+    }
+  },
+  {
+    "Id": 4,
+    "name": "Accountability Partners",
+    "description": "Find workout buddies and stay motivated together",
+    "icon": "Users",
+    "color": "accent",
+    "postCount": 156,
+    "memberCount": 234,
+    "lastActivity": "2024-01-15T11:15:00Z",
+    "lastPost": {
+      "title": "Looking for morning workout buddy",
+      "author": "Maria Santos",
+      "timestamp": "2024-01-15T11:15:00Z"
+    }
+  }
+]

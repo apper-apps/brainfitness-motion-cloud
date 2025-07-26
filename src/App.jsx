@@ -11,6 +11,7 @@ import DailyAIThinkingTrainer from "@/components/pages/DailyAIThinkingTrainer";
 import MentalClarityTrainer from "@/components/pages/MentalClarityTrainer";
 import PromptMarketplace from "@/components/pages/PromptMarketplace";
 import SellerDashboard from "@/components/pages/SellerDashboard";
+import Community from "@/components/pages/Community";
 function App() {
   return (
     <>
@@ -23,6 +24,7 @@ function App() {
           <Route path="clarity-trainer" element={<MentalClarityTrainer />} />
           <Route path="prompt-market" element={<PromptMarketplace />} />
           <Route path="seller-dashboard" element={<SellerDashboard />} />
+          <Route path="community" element={<Community />} />
           <Route path="progress" element={<Progress />} />
           <Route path="achievements" element={<Achievements />} />
           <Route path="settings" element={<Settings />} />

@@ -455,7 +455,6 @@ const loadDashboardData = async () => {
           </div>
         </Card>
       </div>
-
 {/* Quick Exercise Access */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
@@ -500,84 +499,84 @@ const loadDashboardData = async () => {
         </div>
       </Card>
 
-      {/* Prompt Marketplace Preview */}
+      {/* Community Preview */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-accent to-warning rounded-lg flex items-center justify-center">
-              <ApperIcon name="Store" size={16} className="text-white" />
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+              <ApperIcon name="Users" size={16} className="text-white" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900 font-display">
-                Trending Prompts
+                Community Highlights
               </h2>
-              <p className="text-sm text-gray-600">Battle-tested prompts from top creators</p>
+              <p className="text-sm text-gray-600">Connect with fellow brain trainers</p>
             </div>
           </div>
           <Button 
             variant="outline" 
             size="sm"
-            onClick={() => navigate("/prompt-market")}
+            onClick={() => navigate("/community")}
           >
-            Browse Market
+            Join Community
           </Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="p-4 bg-gradient-to-br from-accent/5 to-warning/5 border border-accent/20 rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300"
-            onClick={() => navigate("/prompt-market")}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-accent to-warning rounded-lg flex items-center justify-center">
-                <ApperIcon name="Zap" size={16} className="text-white" />
-              </div>
-              <span className="text-sm font-bold text-accent">$4.99</span>
-            </div>
-            <h4 className="font-medium text-gray-900 text-sm mb-1">Business Strategy Analyzer</h4>
-            <p className="text-xs text-gray-600 mb-2">15 battle wins • 89 sales</p>
-            <div className="flex items-center space-x-1">
-              <ApperIcon name="Star" size={12} className="text-accent fill-current" />
-              <span className="text-xs text-gray-600">4.9 (23 reviews)</span>
-            </div>
-          </motion.div>
-          
-          <motion.div
-            whileHover={{ scale: 1.02 }}
             className="p-4 bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/20 rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300"
-            onClick={() => navigate("/prompt-market")}
+            onClick={() => navigate("/community")}
           >
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-                <ApperIcon name="Pen" size={16} className="text-white" />
+                <ApperIcon name="MessageCircle" size={16} className="text-white" />
               </div>
-              <span className="text-sm font-bold text-primary">$2.99</span>
+              <div className="flex items-center space-x-1">
+                <ApperIcon name="TrendingUp" size={12} className="text-primary" />
+                <span className="text-xs text-primary font-medium">Hot</span>
+              </div>
             </div>
-            <h4 className="font-medium text-gray-900 text-sm mb-1">Creative Writing Catalyst</h4>
-            <p className="text-xs text-gray-600 mb-2">8 battle wins • 156 sales</p>
-            <div className="flex items-center space-x-1">
-              <ApperIcon name="Star" size={12} className="text-accent fill-current" />
-              <span className="text-xs text-gray-600">4.7 (45 reviews)</span>
-            </div>
+            <h4 className="font-medium text-gray-900 text-sm mb-1">General Discussion</h4>
+            <p className="text-xs text-gray-600 mb-2">127 posts • 89 members</p>
+            <p className="text-xs text-gray-500">Latest: "30-day streak completed!"</p>
           </motion.div>
           
           <motion.div
             whileHover={{ scale: 1.02 }}
             className="p-4 bg-gradient-to-br from-success/5 to-info/5 border border-success/20 rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300"
-            onClick={() => navigate("/prompt-market")}
+            onClick={() => navigate("/community")}
           >
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 bg-gradient-to-br from-success to-info rounded-lg flex items-center justify-center">
-                <ApperIcon name="Code" size={16} className="text-white" />
+                <ApperIcon name="Users" size={16} className="text-white" />
               </div>
-              <span className="text-sm font-bold text-success">$6.99</span>
+              <div className="flex items-center space-x-1">
+                <ApperIcon name="Clock" size={12} className="text-success" />
+                <span className="text-xs text-success font-medium">7 AM</span>
+              </div>
             </div>
-            <h4 className="font-medium text-gray-900 text-sm mb-1">Technical Problem Solver</h4>
-            <p className="text-xs text-gray-600 mb-2">22 battle wins • 67 sales</p>
-            <div className="flex items-center space-x-1">
-              <ApperIcon name="Star" size={12} className="text-accent fill-current" />
-              <span className="text-xs text-gray-600">4.8 (18 reviews)</span>
+            <h4 className="font-medium text-gray-900 text-sm mb-1">Morning Warriors</h4>
+            <p className="text-xs text-gray-600 mb-2">24/30 members • Daily training</p>
+            <p className="text-xs text-gray-500">Join the early bird challenge</p>
+          </motion.div>
+          
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="p-4 bg-gradient-to-br from-accent/5 to-warning/5 border border-accent/20 rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300"
+            onClick={() => navigate("/community")}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-accent to-warning rounded-lg flex items-center justify-center">
+                <ApperIcon name="Award" size={16} className="text-white" />
+              </div>
+              <div className="flex items-center space-x-1">
+                <ApperIcon name="Star" size={12} className="text-accent" />
+                <span className="text-xs text-accent font-medium">Pro</span>
+              </div>
             </div>
+            <h4 className="font-medium text-gray-900 text-sm mb-1">Memory Masters</h4>
+            <p className="text-xs text-gray-600 mb-2">18/25 members • Advanced</p>
+            <p className="text-xs text-gray-500">Master complex recall techniques</p>
           </motion.div>
         </div>
       </Card>

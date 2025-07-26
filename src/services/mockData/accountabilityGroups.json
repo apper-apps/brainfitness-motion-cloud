@@ -1,0 +1,65 @@
+[
+  {
+    "Id": 1,
+    "name": "Morning Warriors",
+    "description": "Daily 7 AM brain training sessions. Perfect for early birds who want to start their day with mental fitness!",
+    "memberCount": 24,
+    "maxMembers": 30,
+    "schedule": "Daily at 7:00 AM",
+    "category": "Daily Practice",
+    "difficulty": "Beginner",
+    "isPrivate": false,
+    "createdBy": "Sarah Chen",
+    "createdAt": "2024-01-01T00:00:00Z",
+    "members": [
+      { "Id": 1, "name": "Sarah Chen", "avatar": "SC", "role": "Leader", "streak": 28 },
+      { "Id": 2, "name": "Alex Rodriguez", "avatar": "AR", "role": "Member", "streak": 15 },
+      { "Id": 3, "name": "David Kim", "avatar": "DK", "role": "Member", "streak": 22 }
+    ],
+    "weeklyGoal": 7,
+    "currentWeekProgress": 4,
+    "tags": ["morning", "daily", "beginner"]
+  },
+  {
+    "Id": 2,
+    "name": "Memory Masters",
+    "description": "Advanced memory training group focusing on complex recall exercises and mnemonic techniques.",
+    "memberCount": 18,
+    "maxMembers": 25,
+    "schedule": "Mon, Wed, Fri at 6:00 PM",
+    "category": "Memory Training",
+    "difficulty": "Advanced",
+    "isPrivate": false,
+    "createdBy": "Dr. Emma Wilson",
+    "createdAt": "2023-12-15T00:00:00Z",
+    "members": [
+      { "Id": 1, "name": "Dr. Emma Wilson", "avatar": "EW", "role": "Leader", "streak": 45 },
+      { "Id": 2, "name": "Michael Zhang", "avatar": "MZ", "role": "Co-Leader", "streak": 38 },
+      { "Id": 3, "name": "Lisa Thompson", "avatar": "LT", "role": "Member", "streak": 31 }
+    ],
+    "weeklyGoal": 3,
+    "currentWeekProgress": 2,
+    "tags": ["memory", "advanced", "techniques"]
+  },
+  {
+    "Id": 3,
+    "name": "Weekend Focus",
+    "description": "Relaxed weekend sessions for those with busy weekdays. Focus on stress relief and mental clarity.",
+    "memberCount": 32,
+    "maxMembers": 40,
+    "schedule": "Saturday & Sunday at 10:00 AM",
+    "category": "Stress Relief",
+    "difficulty": "Intermediate",
+    "isPrivate": false,
+    "createdBy": "Maria Santos",
+    "createdAt": "2024-01-08T00:00:00Z",
+    "members": [
+      { "Id": 1, "name": "Maria Santos", "avatar": "MS", "role": "Leader", "streak": 12 },
+      { "Id": 2, "name": "John Davis", "avatar": "JD", "role": "Member", "streak": 8 },
+      { "Id": 3, "name": "Anna Johnson", "avatar": "AJ", "role": "Member", "streak": 10 }
+    ],
+    "weeklyGoal": 2,
+    "currentWeekProgress": 1,
+    "tags": ["weekend", "relaxed", "stress-relief"]
+  }
+]

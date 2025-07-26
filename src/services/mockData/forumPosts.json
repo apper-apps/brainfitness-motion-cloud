@@ -1,0 +1,65 @@
+[
+  {
+    "Id": 1,
+    "forumId": 1,
+    "title": "Just completed my 30-day streak!",
+    "content": "I can't believe I've made it to 30 days! When I started, I could barely focus for 5 minutes. Now I'm completing 20-minute sessions daily. The memory exercises have been particularly helpful. Has anyone else noticed improved focus at work?",
+    "author": {
+      "Id": 1,
+      "name": "Sarah Chen",
+      "avatar": "SC",
+      "title": "Memory Champion",
+      "level": 8,
+      "streak": 30
+    },
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2024-01-15T10:30:00Z",
+    "likes": 23,
+    "replies": 8,
+    "views": 156,
+    "isPinned": false,
+    "tags": ["streak", "milestone", "memory"]
+  },
+  {
+    "Id": 2,
+    "forumId": 2,
+    "title": "Mental clarity score improved by 40%!",
+    "content": "After 3 months of consistent training, my mental clarity score went from 62 to 87! The key was combining the morning exercises with evening reflection sessions. Here's my routine...",
+    "author": {
+      "Id": 2,
+      "name": "Alex Rodriguez",
+      "avatar": "AR",
+      "title": "Focus Master",
+      "level": 12,
+      "streak": 89
+    },
+    "createdAt": "2024-01-15T09:45:00Z",
+    "updatedAt": "2024-01-15T09:45:00Z",
+    "likes": 45,
+    "replies": 15,
+    "views": 298,
+    "isPinned": true,
+    "tags": ["progress", "clarity", "routine"]
+  },
+  {
+    "Id": 3,
+    "forumId": 3,
+    "title": "Best time of day for memory exercises?",
+    "content": "I've been experimenting with different times for memory training. Morning sessions seem more effective for recall, but evening sessions help with retention. What's your experience?",
+    "author": {
+      "Id": 3,
+      "name": "David Kim",
+      "avatar": "DK",
+      "title": "Brain Trainer",
+      "level": 6,
+      "streak": 18
+    },
+    "createdAt": "2024-01-15T08:20:00Z",
+    "updatedAt": "2024-01-15T08:20:00Z",
+    "likes": 12,
+    "replies": 6,
+    "views": 89,
+    "isPinned": false,
+    "tags": ["memory", "timing", "advice"]
+  }
+]
