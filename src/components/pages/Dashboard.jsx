@@ -456,7 +456,7 @@ const loadDashboardData = async () => {
         </Card>
       </div>
 
-      {/* Quick Exercise Access */}
+{/* Quick Exercise Access */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900 font-display">
@@ -497,6 +497,88 @@ const loadDashboardData = async () => {
               </div>
             </motion.div>
           ))}
+        </div>
+      </Card>
+
+      {/* Prompt Marketplace Preview */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-accent to-warning rounded-lg flex items-center justify-center">
+              <ApperIcon name="Store" size={16} className="text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 font-display">
+                Trending Prompts
+              </h2>
+              <p className="text-sm text-gray-600">Battle-tested prompts from top creators</p>
+            </div>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => navigate("/prompt-market")}
+          >
+            Browse Market
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="p-4 bg-gradient-to-br from-accent/5 to-warning/5 border border-accent/20 rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300"
+            onClick={() => navigate("/prompt-market")}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-accent to-warning rounded-lg flex items-center justify-center">
+                <ApperIcon name="Zap" size={16} className="text-white" />
+              </div>
+              <span className="text-sm font-bold text-accent">$4.99</span>
+            </div>
+            <h4 className="font-medium text-gray-900 text-sm mb-1">Business Strategy Analyzer</h4>
+            <p className="text-xs text-gray-600 mb-2">15 battle wins • 89 sales</p>
+            <div className="flex items-center space-x-1">
+              <ApperIcon name="Star" size={12} className="text-accent fill-current" />
+              <span className="text-xs text-gray-600">4.9 (23 reviews)</span>
+            </div>
+          </motion.div>
+          
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="p-4 bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/20 rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300"
+            onClick={() => navigate("/prompt-market")}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                <ApperIcon name="Pen" size={16} className="text-white" />
+              </div>
+              <span className="text-sm font-bold text-primary">$2.99</span>
+            </div>
+            <h4 className="font-medium text-gray-900 text-sm mb-1">Creative Writing Catalyst</h4>
+            <p className="text-xs text-gray-600 mb-2">8 battle wins • 156 sales</p>
+            <div className="flex items-center space-x-1">
+              <ApperIcon name="Star" size={12} className="text-accent fill-current" />
+              <span className="text-xs text-gray-600">4.7 (45 reviews)</span>
+            </div>
+          </motion.div>
+          
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="p-4 bg-gradient-to-br from-success/5 to-info/5 border border-success/20 rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300"
+            onClick={() => navigate("/prompt-market")}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-success to-info rounded-lg flex items-center justify-center">
+                <ApperIcon name="Code" size={16} className="text-white" />
+              </div>
+              <span className="text-sm font-bold text-success">$6.99</span>
+            </div>
+            <h4 className="font-medium text-gray-900 text-sm mb-1">Technical Problem Solver</h4>
+            <p className="text-xs text-gray-600 mb-2">22 battle wins • 67 sales</p>
+            <div className="flex items-center space-x-1">
+              <ApperIcon name="Star" size={12} className="text-accent fill-current" />
+              <span className="text-xs text-gray-600">4.8 (18 reviews)</span>
+            </div>
+          </motion.div>
         </div>
       </Card>
     </div>

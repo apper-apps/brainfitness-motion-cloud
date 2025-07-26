@@ -86,6 +86,63 @@ const feedbackTemplates = [
     improve: "Include more background information about industry, company size, or market conditions."
   }
 ];
+// Prompt Marketplace Data
+const marketplacePrompts = [
+  {
+    Id: 1,
+    title: "Ultimate Business Strategy Analyzer",
+    description: "Comprehensive business analysis prompt that won 15 battles",
+    prompt: "Analyze the competitive landscape for [BUSINESS] by examining market positioning, pricing strategies, customer segments, and growth opportunities. Provide actionable insights with specific recommendations for market entry or expansion.",
+    price: 4.99,
+    sellerId: 1,
+    sellerName: "StrategyPro",
+    sellerRating: 4.8,
+    category: "Business Strategy",
+    battleWins: 15,
+    totalSales: 89,
+    rating: 4.9,
+    reviews: 23,
+    tags: ["strategy", "competitive-analysis", "market-research"],
+    createdAt: new Date('2024-01-15'),
+    featured: true
+  },
+  {
+    Id: 2,
+    title: "Creative Writing Catalyst",
+    description: "Spark creativity with this battle-tested storytelling prompt",
+    prompt: "Create a compelling narrative around [THEME/CONCEPT] that incorporates unexpected plot twists, rich character development, and vivid sensory details. Include dialogue that reveals character motivations and drives the story forward with emotional resonance.",
+    price: 2.99,
+    sellerId: 2,
+    sellerName: "WordWizard",
+    sellerRating: 4.6,
+    category: "Creative Writing",
+    battleWins: 8,
+    totalSales: 156,
+    rating: 4.7,
+    reviews: 45,
+    tags: ["creative-writing", "storytelling", "character-development"],
+    createdAt: new Date('2024-01-20'),
+    featured: false
+  },
+  {
+    Id: 3,
+    title: "Technical Problem Solver",
+    description: "Debug and optimize code with this engineering-focused prompt",
+    prompt: "Analyze the provided [CODE/SYSTEM] to identify performance bottlenecks, security vulnerabilities, and optimization opportunities. Provide specific code improvements, architectural suggestions, and best practices implementation with clear explanations.",
+    price: 6.99,
+    sellerId: 3,
+    sellerName: "CodeMaster",
+    sellerRating: 4.9,
+    category: "Technology",
+    battleWins: 22,
+    totalSales: 67,
+    rating: 4.8,
+    reviews: 18,
+    tags: ["debugging", "optimization", "code-review"],
+    createdAt: new Date('2024-01-25'),
+    featured: true
+  }
+];
 
 // Mental Clarity Breathing Exercises
 const breathingExercises = [
@@ -156,6 +213,10 @@ class PromptService {
     this.clarityExercises = [...breathingExercises];
     this.claritySessions = this.loadClaritySessions();
     this.clarityHistory = this.loadClarityHistory();
+    this.marketplacePrompts = [...marketplacePrompts];
+    this.userPurchases = this.loadUserPurchases();
+    this.sellerListings = this.loadSellerListings();
+    this.stripeLoaded = this.loadStripe();
   }
 
   // Mental Clarity Session Management
@@ -337,6 +398,225 @@ class PromptService {
     };
 
     return recommendation;
+  }
+
+// Marketplace Methods
+  async getMarketplacePrompts(filters = {}) {
+    await this.delay();
+    let prompts = [...this.marketplacePrompts];
+    
+    if (filters.category && filters.category !== 'All') {
+      prompts = prompts.filter(p => p.category === filters.category);
+    }
+    
+    if (filters.priceRange) {
+      const [min, max] = filters.priceRange;
+      prompts = prompts.filter(p => p.price >= min && p.price <= max);
+    }
+    
+    if (filters.search) {
+      const search = filters.search.toLowerCase();
+      prompts = prompts.filter(p => 
+        p.title.toLowerCase().includes(search) ||
+        p.description.toLowerCase().includes(search) ||
+        p.tags.some(tag => tag.includes(search))
+      );
+    }
+    
+    if (filters.sortBy) {
+      switch (filters.sortBy) {
+        case 'price-low':
+          prompts.sort((a, b) => a.price - b.price);
+          break;
+        case 'price-high':
+          prompts.sort((a, b) => b.price - a.price);
+          break;
+        case 'rating':
+          prompts.sort((a, b) => b.rating - a.rating);
+          break;
+        case 'sales':
+          prompts.sort((a, b) => b.totalSales - a.totalSales);
+          break;
+        case 'newest':
+          prompts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          break;
+      }
+    }
+    
+    return prompts;
+  }
+
+  async getPromptById(id) {
+    await this.delay();
+    return this.marketplacePrompts.find(p => p.Id === parseInt(id));
+  }
+
+  async getFeaturedPrompts() {
+    await this.delay();
+    return this.marketplacePrompts.filter(p => p.featured).slice(0, 3);
+  }
+
+  async purchasePrompt(promptId, paymentMethod) {
+    await this.delay(1000);
+    
+    const prompt = this.marketplacePrompts.find(p => p.Id === parseInt(promptId));
+    if (!prompt) throw new Error('Prompt not found');
+
+    // Simulate Stripe payment processing
+    const paymentResult = await this.processStripePayment(prompt.price, paymentMethod);
+    
+    if (paymentResult.success) {
+      // Add to user purchases
+      const purchase = {
+        Id: Date.now(),
+        promptId: prompt.Id,
+        prompt: { ...prompt },
+        purchaseDate: new Date().toISOString(),
+        amount: prompt.price,
+        platformFee: prompt.price * 0.3,
+        sellerEarnings: prompt.price * 0.7,
+        paymentIntentId: paymentResult.paymentIntentId
+      };
+      
+      this.userPurchases.push(purchase);
+      this.saveUserPurchases();
+      
+      // Update prompt sales count
+      prompt.totalSales += 1;
+      
+      // Process seller payout
+      await this.processSellePayout(prompt.sellerId, purchase.sellerEarnings);
+      
+      toast.success('Prompt purchased successfully!');
+      return purchase;
+    } else {
+      throw new Error(paymentResult.error || 'Payment failed');
+    }
+  }
+
+  async getUserPurchases() {
+    await this.delay();
+    return [...this.userPurchases];
+  }
+
+  async getSellerDashboard(sellerId = 1) {
+    await this.delay();
+    const listings = this.sellerListings.filter(l => l.sellerId === sellerId);
+    const totalEarnings = listings.reduce((sum, l) => sum + (l.totalSales * l.price * 0.7), 0);
+    const totalSales = listings.reduce((sum, l) => sum + l.totalSales, 0);
+    
+    return {
+      listings,
+      stats: {
+        totalListings: listings.length,
+        totalSales,
+        totalEarnings: totalEarnings.toFixed(2),
+        averageRating: listings.length > 0 ? 
+          (listings.reduce((sum, l) => sum + l.rating, 0) / listings.length).toFixed(1) : 0
+      }
+    };
+  }
+
+  async createPromptListing(promptData) {
+    await this.delay();
+    
+    const newListing = {
+      Id: Date.now(),
+      ...promptData,
+      sellerId: 1, // Current user
+      sellerName: "You",
+      sellerRating: 4.5,
+      totalSales: 0,
+      rating: 0,
+      reviews: 0,
+      createdAt: new Date(),
+      featured: false
+    };
+    
+    this.sellerListings.push(newListing);
+    this.marketplacePrompts.push(newListing);
+    this.saveSellerListings();
+    
+    toast.success('Prompt listed successfully!');
+    return newListing;
+  }
+
+  async updatePromptListing(id, updates) {
+    await this.delay();
+    
+    const index = this.sellerListings.findIndex(l => l.Id === parseInt(id));
+    if (index === -1) throw new Error('Listing not found');
+    
+    this.sellerListings[index] = { ...this.sellerListings[index], ...updates };
+    
+    const marketIndex = this.marketplacePrompts.findIndex(p => p.Id === parseInt(id));
+    if (marketIndex !== -1) {
+      this.marketplacePrompts[marketIndex] = { ...this.marketplacePrompts[marketIndex], ...updates };
+    }
+    
+    this.saveSellerListings();
+    toast.success('Listing updated successfully!');
+    return this.sellerListings[index];
+  }
+
+  async deletePromptListing(id) {
+    await this.delay();
+    
+    this.sellerListings = this.sellerListings.filter(l => l.Id !== parseInt(id));
+    this.marketplacePrompts = this.marketplacePrompts.filter(p => p.Id !== parseInt(id));
+    
+    this.saveSellerListings();
+    toast.success('Listing deleted successfully!');
+  }
+
+  // Stripe Integration
+  async loadStripe() {
+    if (typeof window !== 'undefined') {
+      const { loadStripe } = await import('@stripe/stripe-js');
+      return loadStripe('pk_test_your_publishable_key_here'); // Replace with actual key
+    }
+    return null;
+  }
+
+  async processStripePayment(amount, paymentMethod) {
+    // Simulate Stripe payment processing
+    await this.delay(2000);
+    
+    // In real implementation, this would call your backend API
+    // which would create a PaymentIntent with Stripe
+    const success = Math.random() > 0.1; // 90% success rate for demo
+    
+    if (success) {
+      return {
+        success: true,
+        paymentIntentId: `pi_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      };
+    } else {
+      return {
+        success: false,
+        error: 'Payment failed. Please try again.'
+      };
+    }
+  }
+
+  async processSellePayout(sellerId, amount) {
+    // Simulate automated payout processing
+    await this.delay(500);
+    
+    // In real implementation, this would trigger Stripe Connect payout
+    console.log(`Processing payout of $${amount.toFixed(2)} to seller ${sellerId}`);
+    
+    // Store payout record
+    const payout = {
+      Id: Date.now(),
+      sellerId,
+      amount,
+      status: 'completed',
+      processedAt: new Date().toISOString()
+    };
+    
+    // In real app, save to payouts collection
+    return payout;
   }
 
   // Existing AI Trainer methods...
@@ -637,10 +917,29 @@ class PromptService {
       responses.push("Understanding the customer perspective is vital. How might you gather more user feedback on this?");
     }
 
-    return responses[Math.floor(Math.random() * responses.length)];
+return responses[Math.floor(Math.random() * responses.length)];
   }
 
   // Storage methods
+  loadUserPurchases() {
+    const stored = localStorage.getItem('user-purchases');
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  saveUserPurchases() {
+    localStorage.setItem('user-purchases', JSON.stringify(this.userPurchases));
+  }
+
+  loadSellerListings() {
+    const stored = localStorage.getItem('seller-listings');
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  saveSellerListings() {
+    localStorage.setItem('seller-listings', JSON.stringify(this.sellerListings));
+  }
+
+  // Existing storage methods
   loadWorkoutSessions() {
     const stored = localStorage.getItem('ai-workout-sessions');
     return stored ? JSON.parse(stored) : [];
@@ -667,8 +966,7 @@ class PromptService {
   saveClaritySessions() {
     localStorage.setItem('clarity-sessions', JSON.stringify(this.claritySessions));
   }
-
-  loadClarityHistory() {
+loadClarityHistory() {
     const stored = localStorage.getItem('clarity-history');
     return stored ? JSON.parse(stored) : [];
   }

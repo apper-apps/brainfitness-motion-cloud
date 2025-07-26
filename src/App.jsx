@@ -9,7 +9,8 @@ import Achievements from "@/components/pages/Achievements";
 import Settings from "@/components/pages/Settings";
 import DailyAIThinkingTrainer from "@/components/pages/DailyAIThinkingTrainer";
 import MentalClarityTrainer from "@/components/pages/MentalClarityTrainer";
-
+import PromptMarketplace from "@/components/pages/PromptMarketplace";
+import SellerDashboard from "@/components/pages/SellerDashboard";
 function App() {
   return (
     <>
@@ -20,6 +21,8 @@ function App() {
           <Route path="exercise/:id" element={<ExerciseGame />} />
           <Route path="ai-trainer" element={<DailyAIThinkingTrainer />} />
           <Route path="clarity-trainer" element={<MentalClarityTrainer />} />
+          <Route path="prompt-market" element={<PromptMarketplace />} />
+          <Route path="seller-dashboard" element={<SellerDashboard />} />
           <Route path="progress" element={<Progress />} />
           <Route path="achievements" element={<Achievements />} />
           <Route path="settings" element={<Settings />} />
