@@ -61,7 +61,6 @@ async getProgressHistory(days = 30) {
       } else {
         console.error(error.message);
       }
-      return [];
 return [];
     }
   }

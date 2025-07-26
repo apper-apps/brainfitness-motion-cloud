@@ -11,6 +11,8 @@ const Header = () => {
     { id: 2, message: "New achievement unlocked!", time: "1 hour ago" }
   ]);
   
+  const { logout } = useContext(AuthContext);
+  
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -40,7 +42,6 @@ const Header = () => {
               variant="ghost" 
               size="sm" 
               onClick={() => {
-                const { logout } = useContext(AuthContext);
                 logout();
               }}
               className="ml-2"

@@ -111,7 +111,6 @@ async getRecommendedExercises() {
       } else {
         console.error(error.message);
       }
-      return [];
 return [];
     }
   }
