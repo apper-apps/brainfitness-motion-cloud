@@ -39,10 +39,22 @@ class WorkoutService {
     return { ...newWorkout };
   }
 
-  async recordExerciseCompletion(exerciseId, score) {
+async recordExerciseCompletion(exerciseId, score) {
     await this.delay();
     // In a real app, this would update the database
-    return { success: true, score };
+    // Update user analytics and sync across modules
+    return { success: true, score, analyticsUpdated: true };
+  }
+
+  async getPerformanceAnalytics() {
+    await this.delay();
+    return {
+      averageScore: 87.5,
+      improvementRate: 12.3,
+      bestCategory: "Memory",
+      sessionsThisWeek: 5,
+      totalMinutesTraining: 240
+    };
   }
 
   getNextId() {

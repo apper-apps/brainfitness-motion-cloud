@@ -10,7 +10,7 @@ class UserService {
     return this.users[0]; // Return first user as current user
   }
 
-  async getCurrentUserStats() {
+async getCurrentUserStats() {
     await this.delay();
     const user = this.users[0];
     return {
@@ -18,8 +18,78 @@ class UserService {
       totalWorkouts: user.totalWorkouts,
       currentStreak: user.currentStreak,
       longestStreak: user.longestStreak,
-      improvement: 25
+      improvement: 25,
+      thinkingScore: 892,
+      memoryImprovement: 78,
+      weeklyGoalProgress: 71
     };
+  }
+
+  async getAnalyticsData() {
+    await this.delay();
+    return {
+      thinkingScore: 892,
+      thinkingProgress: 85,
+      thinkingTrend: { direction: "up", value: "+8" },
+      mentalFitnessTrend: { direction: "up", value: "+12" },
+      memoryImprovement: 78,
+      memoryImprovementTrend: 15,
+      streakGrowth: 2,
+      weeklyThinkingAverage: 85,
+      weeklyGoalProgress: 71,
+      recentThinkingScores: [
+        { date: "Today", value: 95 },
+        { date: "Yesterday", value: 87 },
+        { date: "2 days ago", value: 92 }
+      ],
+      memoryMetrics: {
+        shortTerm: 82,
+        longTerm: 78,
+        working: 85
+      },
+      habitMetrics: [
+        { name: "Daily Exercise", completed: true, streak: 7 },
+        { name: "Thinking Training", completed: true, streak: 6 },
+        { name: "Memory Practice", completed: false, streak: 5 }
+      ],
+      recentPerformance: [
+        { exercise: "Pattern Recognition", date: "Today", score: "95", improvement: "+8%", icon: "Grid3x3" },
+        { exercise: "Memory Matrix", date: "Yesterday", score: "87", improvement: "+5%", icon: "Brain" },
+        { exercise: "Logic Puzzle", date: "2 days ago", score: "92", improvement: "+12%", icon: "Puzzle" }
+      ],
+      nearbyAchievements: [
+        { name: "Memory Master", description: "Complete 10 memory exercises", progress: 80 },
+        { name: "Logic Expert", description: "Score 90+ on logic tests", progress: 65 },
+        { name: "Speed Demon", description: "Complete exercises under time", progress: 90 }
+      ]
+    };
+  }
+
+  async getPersonalizedRecommendations() {
+    await this.delay();
+    return [
+      {
+        title: "Focus Enhancement",
+        description: "Your attention span has improved 15%. Try advanced focus exercises.",
+        icon: "Target",
+        action: "/exercises",
+        actionText: "Try Exercises"
+      },
+      {
+        title: "Memory Boost",
+        description: "Memory scores show potential for improvement. Practice daily.",
+        icon: "Brain",
+        action: "/exercises",
+        actionText: "Memory Games"
+      },
+      {
+        title: "Streak Milestone",
+        description: "You're 3 days away from your longest streak! Keep going.",
+        icon: "Flame",
+        action: "/progress",
+        actionText: "View Progress"
+      }
+    ];
   }
 
   async getUserSettings() {
