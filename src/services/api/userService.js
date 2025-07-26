@@ -1,5 +1,4 @@
 import usersData from "@/services/mockData/users.json";
-
 class UserService {
   constructor() {
     this.users = [...usersData];
@@ -140,13 +139,12 @@ async getCurrentUserStats() {
         action: "/progress",
         actionText: "View Progress"
       }
-    ];
+];
   }
 
   async getUserSettings() {
-await this.delay();
+    await this.delay();
     return {
-      notifications: true,
       dailyReminders: true,
       streakAlerts: true,
       soundEffects: true,
@@ -162,7 +160,7 @@ await this.delay();
     };
   }
 
-async updateSettings(settings) {
+  async updateSettings(settings) {
     await this.delay();
     // In a real app, this would save to a database
     // Handle newsletter preferences and validate series selections
@@ -178,5 +176,4 @@ async updateSettings(settings) {
   }
 }
 
-export const userService = new UserService();
 export const userService = new UserService();
