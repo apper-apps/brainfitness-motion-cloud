@@ -146,7 +146,7 @@ const marketplacePrompts = [
 
 // Prompt Packs for Brain Fitness
 const promptPacks = [
-  {
+{
     Id: 1,
     title: "Memory Boost Pack",
     description: "10 scientifically-backed prompts designed to enhance memory retention and recall through targeted cognitive exercises.",
@@ -163,11 +163,21 @@ const promptPacks = [
     efficacyRating: 94,
     workoutIntegration: "Perfect for Daily Thinking Sessions focused on memory improvement. Use before important learning sessions.",
     createdAt: '2024-01-15',
+    previewPrompts: [
+      "Create a detailed mental map of [topic] with interconnected concepts and visual anchors for enhanced recall.",
+      "Design a memory palace for [subject] using familiar locations and vivid imagery associations."
+    ],
     prompts: [
       "Create a detailed mental map of [topic] with interconnected concepts and visual anchors for enhanced recall.",
       "Design a memory palace for [subject] using familiar locations and vivid imagery associations.",
       "Generate mnemonic devices for [information] using the Method of Loci technique.",
-      // ... 7 more prompts
+      "Transform abstract concepts into vivid mental images using creative visualization techniques.",
+      "Build sequential memory chains linking [items] through logical and emotional connections.",
+      "Create rhythm-based memory patterns for [data] using auditory anchoring methods.",
+      "Design spaced repetition schedules optimized for [subject] retention and long-term recall.",
+      "Develop context-dependent memory triggers that enhance recall in specific environments.",
+      "Generate story-based memory frameworks that weave [facts] into memorable narratives.",
+      "Create multi-sensory memory experiences incorporating visual, auditory, and kinesthetic elements."
     ]
   },
   {
@@ -187,10 +197,26 @@ const promptPacks = [
     efficacyRating: 96,
     workoutIntegration: "Ideal for Mental Clarity Trainer sessions when you need sustained attention for complex tasks.",
     createdAt: '2024-01-20',
+    previewPrompts: [
+      "Create a focused attention protocol for [task] that eliminates distractions and maintains flow state.",
+      "Design a concentration exercise that progressively builds mental stamina for [duration] minutes."
+    ],
     prompts: [
       "Create a focused attention protocol for [task] that eliminates distractions and maintains flow state.",
       "Design a concentration exercise that progressively builds mental stamina for [duration] minutes.",
-      // ... 13 more prompts
+      "Develop environmental focus triggers that instantly shift your brain into high-concentration mode.",
+      "Build attention-switching frameworks for managing multiple priorities without losing focus.",
+      "Generate mindfulness-based focus techniques tailored to [specific work environment].",
+      "Create distraction resistance protocols for high-stimulation environments.",
+      "Design attention restoration routines for recovering from mental fatigue.",
+      "Develop single-pointed focus exercises for deep work sessions on [complex tasks].",
+      "Build cognitive load management systems for handling information-heavy projects.",
+      "Create flow state entry sequences customized for [your peak performance times].",
+      "Generate focus sustainability strategies for extended concentration periods.",
+      "Design attention quality metrics to track and improve concentration effectiveness.",
+      "Develop focus flexibility training for switching between different attention types.",
+      "Create concentration anchoring techniques using environmental and internal cues.",
+      "Build attention regulation protocols for managing focus under pressure."
     ]
   },
   {
@@ -210,10 +236,15 @@ const promptPacks = [
     efficacyRating: 89,
     workoutIntegration: "Great starting point for any workout session involving analytical thinking or decision making.",
     createdAt: '2024-01-10',
+    previewPrompts: [
+      "Break down [complex problem] into manageable components using systematic analysis."
+    ],
     prompts: [
       "Break down [complex problem] into manageable components using systematic analysis.",
       "Generate multiple solution pathways for [challenge] using lateral thinking techniques.",
-      // ... 3 more prompts
+      "Apply the 5 Whys method to uncover the root cause of [recurring issue].",
+      "Create solution evaluation matrices weighing feasibility, impact, and resources for [options].",
+      "Design iterative problem-solving cycles with built-in learning and adaptation phases."
     ]
   },
   {
@@ -233,10 +264,36 @@ const promptPacks = [
     efficacyRating: 97,
     workoutIntegration: "Perfect for brainstorming sessions and creative problem-solving workouts. Combines well with any exercise.",
     createdAt: '2024-01-25',
+    previewPrompts: [
+      "Generate innovative solutions for [challenge] using SCAMPER methodology and creative constraints.",
+      "Create unexpected connections between [concept A] and [concept B] to spark breakthrough insights."
+    ],
     prompts: [
       "Generate innovative solutions for [challenge] using SCAMPER methodology and creative constraints.",
       "Create unexpected connections between [concept A] and [concept B] to spark breakthrough insights.",
-      // ... 23 more prompts
+      "Design ideation frameworks that combine logical analysis with intuitive leaps.",
+      "Build creative thinking rituals that consistently produce original ideas for [domain].",
+      "Generate perspective-shifting exercises to see [situation] from multiple viewpoints.",
+      "Create inspiration-gathering systems for continuous creative input and processing.",
+      "Design creative constraint frameworks that boost innovation within [specific parameters].",
+      "Build idea evolution processes that transform initial concepts into refined solutions.",
+      "Generate creative collaboration protocols for group brainstorming and idea development.",
+      "Create artistic thinking applications for [non-creative professional contexts].",
+      "Design imagination expansion exercises that push beyond conventional thinking patterns.",
+      "Build creative confidence routines that overcome self-doubt and creative blocks.",
+      "Generate cross-domain inspiration techniques drawing from [unrelated fields].",
+      "Create innovation evaluation frameworks balancing creativity with practicality.",
+      "Design creative momentum systems that maintain idea flow during productive periods.",
+      "Build originality enhancement techniques that ensure fresh perspectives on [familiar topics].",
+      "Generate creative problem reframing methods that reveal hidden solution opportunities.",
+      "Create playful thinking protocols that inject fun and spontaneity into serious work.",
+      "Design creative risk-taking frameworks that balance bold ideas with calculated decisions.",
+      "Build creative synthesis techniques that combine disparate elements into coherent wholes.",
+      "Generate creative timing strategies that align idea generation with natural creative rhythms.",
+      "Create creative documentation systems that capture and develop fleeting inspirations.",
+      "Design creative feedback loops that refine ideas through iterative improvement cycles.",
+      "Build creative application protocols that translate abstract ideas into concrete actions.",
+      "Generate creative legacy frameworks that ensure your innovations have lasting impact."
     ]
   },
   {
@@ -256,10 +313,102 @@ const promptPacks = [
     efficacyRating: 92,
     workoutIntegration: "Essential for leadership workouts and strategic thinking sessions. Use when facing important choices.",
     createdAt: '2024-01-18',
+    previewPrompts: [
+      "Evaluate [decision] using a structured framework that weighs risks, benefits, and long-term consequences."
+    ],
     prompts: [
       "Evaluate [decision] using a structured framework that weighs risks, benefits, and long-term consequences.",
       "Create a decision matrix for [options] that considers multiple criteria and stakeholder perspectives.",
-      // ... 10 more prompts
+      "Apply scenario planning to anticipate potential outcomes of [major decision].",
+      "Design decision-making protocols that account for cognitive biases and emotional influences.",
+      "Build confidence assessment frameworks for evaluating decision certainty and risk tolerance.",
+      "Generate stakeholder analysis templates for understanding decision impact on all parties.",
+      "Create time-boxed decision processes that prevent analysis paralysis on [urgent choices].",
+      "Design decision reversal assessments to ensure choices can be adjusted if needed.",
+      "Build values-based decision filters that align choices with core principles and priorities.",
+      "Generate decision communication strategies for explaining and gaining support for [choices].",
+      "Create decision tracking systems that monitor outcomes and improve future decision-making.",
+      "Design rapid decision frameworks for high-pressure situations requiring quick, quality choices."
+    ]
+  },
+  {
+    Id: 6,
+    title: "CompressLearn Business Mastery",
+    description: "Ultimate business strategy bundle combining 50+ premium prompts, templates, and expert guides for comprehensive skill development.",
+    price: 44.99,
+    originalPrice: 49.99,
+    tier: 'compresslearn',
+    promptCount: 52,
+    category: 'Business Strategy',
+    featured: true,
+    includesTemplates: true,
+    includesGuides: true,
+    includesVideoTutorials: true,
+    includesPersonalizedCoaching: true,
+    rating: 4.9,
+    reviews: 156,
+    totalSales: 89,
+    efficacyRating: 98,
+    workoutIntegration: "Comprehensive business training designed to integrate with all workout types. Perfect for entrepreneurs and business leaders.",
+    createdAt: '2024-01-30',
+    bundleDiscount: 10,
+    previewPrompts: [
+      "Develop a comprehensive competitive analysis framework for [industry] that identifies market gaps and opportunities.",
+      "Create a customer journey mapping system that reveals optimization opportunities at every touchpoint.",
+      "Design a strategic planning protocol that aligns short-term actions with long-term business vision."
+    ],
+    prompts: [
+      "Develop a comprehensive competitive analysis framework for [industry] that identifies market gaps and opportunities.",
+      "Create a customer journey mapping system that reveals optimization opportunities at every touchpoint.",
+      "Design a strategic planning protocol that aligns short-term actions with long-term business vision.",
+      "Build market research methodologies that uncover hidden customer needs and preferences.",
+      "Generate pricing strategy frameworks that maximize value while maintaining competitiveness.",
+      "Create sales funnel optimization protocols that increase conversion at every stage.",
+      "Design brand positioning strategies that differentiate your business in crowded markets.",
+      "Build customer retention systems that transform one-time buyers into loyal advocates.",
+      "Generate partnership evaluation frameworks for identifying and leveraging strategic alliances.",
+      "Create financial forecasting models that predict business performance under various scenarios.",
+      // ... 42 more comprehensive business prompts
+    ]
+  },
+  {
+    Id: 7,
+    title: "CompressLearn Creative Accelerator",
+    description: "Complete creative development system with 40+ advanced prompts, artistic techniques, and innovation frameworks for creative professionals.",
+    price: 35.99,
+    originalPrice: 39.99,
+    tier: 'compresslearn',
+    promptCount: 43,
+    category: 'Creative Thinking',
+    featured: true,
+    includesTemplates: true,
+    includesGuides: true,
+    includesVideoTutorials: true,
+    includesPersonalizedCoaching: false,
+    rating: 4.8,
+    reviews: 124,
+    totalSales: 67,
+    efficacyRating: 96,
+    workoutIntegration: "Advanced creative training that enhances all mental exercises with artistic thinking approaches.",
+    createdAt: '2024-02-01',
+    bundleDiscount: 10,
+    previewPrompts: [
+      "Design a creative breakthrough protocol that systematically overcomes creative blocks and generates fresh ideas.",
+      "Create an inspiration synthesis system that transforms diverse inputs into original creative works.",
+      "Build an artistic risk-taking framework that balances creative exploration with practical constraints."
+    ],
+    prompts: [
+      "Design a creative breakthrough protocol that systematically overcomes creative blocks and generates fresh ideas.",
+      "Create an inspiration synthesis system that transforms diverse inputs into original creative works.",
+      "Build an artistic risk-taking framework that balances creative exploration with practical constraints.",
+      "Generate cross-disciplinary creativity techniques that apply artistic principles to [professional field].",
+      "Create imagination amplification exercises that expand the boundaries of creative possibility.",
+      "Design creative collaboration frameworks that harness collective genius for innovative outcomes.",
+      "Build creative confidence systems that overcome imposter syndrome and artistic self-doubt.",
+      "Generate aesthetic development protocols that refine taste and artistic judgment over time.",
+      "Create creative process optimization techniques that maximize output while maintaining quality.",
+      "Design innovation documentation systems that capture and develop creative insights effectively.",
+      // ... 33 more advanced creative prompts
     ]
   }
 ];
@@ -584,7 +733,7 @@ async getDailyRecommendation(isPremium = false) {
     return { ...pack };
   }
 
-  async purchasePromptPack(packId, paymentMethod) {
+async purchasePromptPack(packId, paymentMethod) {
     await this.delay(1000);
     
     const pack = this.promptPacks.find(p => p.Id === parseInt(packId));
@@ -592,8 +741,13 @@ async getDailyRecommendation(isPremium = false) {
       throw new Error('Prompt pack not found');
     }
 
+    // Calculate final price with CompressLearn discount
+    const finalPrice = pack.tier === 'compresslearn' && pack.bundleDiscount 
+      ? pack.price 
+      : pack.price;
+
     // Simulate Stripe payment processing
-    const stripeResult = await this.processStripePayment(pack.price, paymentMethod);
+    const stripeResult = await this.processStripePayment(finalPrice, paymentMethod);
     
     if (!stripeResult.success) {
       throw new Error('Payment failed. Please try again.');
@@ -604,10 +758,12 @@ async getDailyRecommendation(isPremium = false) {
       Id: Date.now(),
       packId: pack.Id,
       packTitle: pack.title,
-      amount: pack.price,
+      amount: finalPrice,
+      originalAmount: pack.originalPrice || pack.price,
+      discountApplied: pack.bundleDiscount || 0,
       paymentId: stripeResult.paymentId,
       purchaseDate: new Date().toISOString(),
-      type: 'pack',
+      type: pack.tier === 'compresslearn' ? 'bundle' : 'pack',
       downloadUrls: pack.prompts.map((prompt, index) => ({
         promptId: `${pack.Id}_${index + 1}`,
         title: `Prompt ${index + 1}`,
@@ -625,7 +781,17 @@ async getDailyRecommendation(isPremium = false) {
           title: 'Usage Guide',
           downloadUrl: `https://api.brainfitness.ai/downloads/pack_${pack.Id}_guide.pdf`
         }
-      ] : []
+      ] : [],
+      videoTutorials: pack.includesVideoTutorials ? [
+        {
+          title: 'Video Tutorial Series',
+          downloadUrl: `https://api.brainfitness.ai/downloads/pack_${pack.Id}_videos.zip`
+        }
+      ] : [],
+      coaching: pack.includesPersonalizedCoaching ? {
+        sessionCount: 3,
+        schedulingUrl: `https://api.brainfitness.ai/coaching/schedule/${pack.Id}`
+      } : null
     };
 
     // Add to user purchases
@@ -635,7 +801,11 @@ async getDailyRecommendation(isPremium = false) {
     // Update pack sales count
     pack.totalSales += 1;
 
-    toast.success(`${pack.title} purchased successfully! Downloads are ready.`);
+    const successMessage = pack.tier === 'compresslearn' 
+      ? `${pack.title} bundle purchased successfully! You saved ${pack.bundleDiscount}%. All resources are ready for download.`
+      : `${pack.title} purchased successfully! Downloads are ready.`;
+
+    toast.success(successMessage);
     return purchase;
   }
 
@@ -924,12 +1094,19 @@ async processSellePayout(sellerId, amount) {
   }
 
   // Analytics for prompt packs
-  async getPackAnalytics() {
+async getPackAnalytics() {
     await this.delay();
     
     const totalPackSales = this.promptPacks.reduce((sum, pack) => sum + pack.totalSales, 0);
     const totalPackRevenue = this.promptPacks.reduce((sum, pack) => sum + (pack.totalSales * pack.price), 0);
     const avgPackRating = this.promptPacks.reduce((sum, pack) => sum + pack.rating, 0) / this.promptPacks.length;
+    
+    // CompressLearn bundle analytics
+    const compressLearnPacks = this.promptPacks.filter(p => p.tier === 'compresslearn');
+    const bundleSales = compressLearnPacks.reduce((sum, pack) => sum + pack.totalSales, 0);
+    const bundleRevenue = compressLearnPacks.reduce((sum, pack) => sum + (pack.totalSales * pack.price), 0);
+    const bundleDiscountSavings = compressLearnPacks.reduce((sum, pack) => 
+      sum + (pack.totalSales * ((pack.originalPrice || pack.price) - pack.price)), 0);
     
     return {
       totalPacks: this.promptPacks.length,
@@ -942,7 +1119,21 @@ async processSellePayout(sellerId, amount) {
       packsByTier: {
         basic: this.promptPacks.filter(p => p.tier === 'basic').length,
         standard: this.promptPacks.filter(p => p.tier === 'standard').length,
-        premium: this.promptPacks.filter(p => p.tier === 'premium').length
+        premium: this.promptPacks.filter(p => p.tier === 'premium').length,
+        compresslearn: compressLearnPacks.length
+      },
+      compressLearnAnalytics: {
+        totalBundles: compressLearnPacks.length,
+        bundleSales,
+        bundleRevenue,
+        bundleDiscountSavings,
+        avgBundleValue: compressLearnPacks.length > 0 ? bundleRevenue / bundleSales || 0 : 0,
+        bundleConversionRate: totalPackSales > 0 ? (bundleSales / totalPackSales * 100).toFixed(1) : 0
+      },
+      previewAnalytics: {
+        packsWithPreviews: this.promptPacks.filter(p => p.previewPrompts && p.previewPrompts.length > 0).length,
+        avgPreviewCount: this.promptPacks.reduce((sum, pack) => 
+          sum + (pack.previewPrompts ? pack.previewPrompts.length : 0), 0) / this.promptPacks.length
       }
     };
   }

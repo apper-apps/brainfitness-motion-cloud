@@ -22,13 +22,14 @@ const [activeTab, setActiveTab] = useState('prompts');
   const [selectedPrompt, setSelectedPrompt] = useState(null);
   const [selectedPack, setSelectedPack] = useState(null);
   const [purchasing, setPurchasing] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewData, setPreviewData] = useState(null);
   
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [priceRange, setPriceRange] = useState([0, 25]);
+  const [priceRange, setPriceRange] = useState([0, 50]);
   const [sortBy, setSortBy] = useState('featured');
-
   const categories = ['All', 'Business Strategy', 'Creative Writing', 'Technology', 'Marketing', 'Education', 'Memory Enhancement', 'Focus Training', 'Problem Solving'];
   const packCategories = ['All', 'Memory Enhancement', 'Focus Training', 'Problem Solving', 'Creative Thinking', 'Decision Making'];
   const sortOptions = [
@@ -48,7 +49,7 @@ loadData();
     applyFilters();
   }, [prompts, promptPacks, searchTerm, selectedCategory, priceRange, sortBy, activeTab]);
 
-  const loadData = async () => {
+const loadData = async () => {
     try {
       setLoading(true);
       const [promptsData, packsData] = await Promise.all([
@@ -138,15 +139,19 @@ return (
           </div>
         </div>
         
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+{/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Card className="p-4 text-center">
             <div className="text-2xl font-bold text-primary">{prompts.length}</div>
             <div className="text-sm text-gray-600">Individual Prompts</div>
           </Card>
           <Card className="p-4 text-center">
-            <div className="text-2xl font-bold text-accent">{promptPacks.length}</div>
+            <div className="text-2xl font-bold text-accent">{promptPacks.filter(p => p.tier !== 'compresslearn').length}</div>
             <div className="text-sm text-gray-600">Prompt Packs</div>
+          </Card>
+          <Card className="p-4 text-center">
+            <div className="text-2xl font-bold text-orange-500">{promptPacks.filter(p => p.tier === 'compresslearn').length}</div>
+            <div className="text-sm text-gray-600">CompressLearn Bundles</div>
           </Card>
           <Card className="p-4 text-center">
             <div className="text-2xl font-bold text-success">{prompts.reduce((sum, p) => sum + p.totalSales, 0) + promptPacks.reduce((sum, p) => sum + p.totalSales, 0)}</div>
@@ -432,16 +437,18 @@ return (
       )}
 
       {/* Purchase Modal - Prompt Pack */}
-      {selectedPack && (
+{selectedPack && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
           >
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">Purchase Prompt Pack</h3>
+                <h3 className="text-xl font-bold text-gray-900">
+                  {selectedPack.tier === 'compresslearn' ? 'Purchase CompressLearn Bundle' : 'Purchase Prompt Pack'}
+                </h3>
                 <button
                   onClick={() => setSelectedPack(null)}
                   className="p-2 text-gray-400 hover:text-gray-600"
@@ -452,21 +459,44 @@ return (
               
               <div className="mb-6">
                 <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center">
-                    <ApperIcon name="Package" size={32} className="text-white" />
+                  <div className={`w-16 h-16 bg-gradient-to-br ${selectedPack.tier === 'compresslearn' ? 'from-orange-500 to-red-500' : 'from-primary to-secondary'} rounded-xl flex items-center justify-center`}>
+                    <ApperIcon name={selectedPack.tier === 'compresslearn' ? 'Zap' : 'Package'} size={32} className="text-white" />
                   </div>
                   <div>
                     <h4 className="text-xl font-semibold text-gray-900">{selectedPack.title}</h4>
                     <div className="flex items-center space-x-2 mt-1">
-                      <Badge variant={selectedPack.tier === 'basic' ? 'info' : selectedPack.tier === 'premium' ? 'accent' : 'primary'}>
-                        {selectedPack.tier.charAt(0).toUpperCase() + selectedPack.tier.slice(1)} Pack
+                      <Badge variant={selectedPack.tier === 'basic' ? 'info' : selectedPack.tier === 'premium' ? 'accent' : selectedPack.tier === 'compresslearn' ? 'warning' : 'primary'}>
+                        {selectedPack.tier === 'compresslearn' ? 'CompressLearn Bundle' : `${selectedPack.tier.charAt(0).toUpperCase() + selectedPack.tier.slice(1)} Pack`}
                       </Badge>
                       <Badge variant="success">{selectedPack.promptCount} Prompts</Badge>
+                      {selectedPack.tier === 'compresslearn' && selectedPack.bundleDiscount && (
+                        <Badge variant="error">{selectedPack.bundleDiscount}% OFF</Badge>
+                      )}
                     </div>
                   </div>
                 </div>
                 
                 <p className="text-gray-600 mb-6">{selectedPack.description}</p>
+                
+                {/* Preview Section */}
+                {selectedPack.previewPrompts && selectedPack.previewPrompts.length > 0 && (
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg mb-6">
+                    <div className="flex items-center space-x-2 mb-3">
+                      <ApperIcon name="Eye" size={16} className="text-blue-600" />
+                      <h5 className="font-medium text-blue-900">Preview Sample Prompts</h5>
+                    </div>
+                    <div className="space-y-2">
+                      {selectedPack.previewPrompts.map((prompt, index) => (
+                        <div key={index} className="bg-white p-3 rounded border-l-4 border-blue-500">
+                          <p className="text-sm text-gray-700 italic">"{prompt}"</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-blue-600 mt-2">
+                      + {selectedPack.promptCount - selectedPack.previewPrompts.length} more premium prompts included
+                    </p>
+                  </div>
+                )}
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div className="space-y-4">
@@ -486,6 +516,18 @@ return (
                         <div className="flex items-center space-x-2">
                           <ApperIcon name="Check" size={16} className="text-success" />
                           <span className="text-sm">Usage guides & best practices</span>
+                        </div>
+                      )}
+                      {selectedPack.includesVideoTutorials && (
+                        <div className="flex items-center space-x-2">
+                          <ApperIcon name="Check" size={16} className="text-success" />
+                          <span className="text-sm">Video tutorial series</span>
+                        </div>
+                      )}
+                      {selectedPack.includesPersonalizedCoaching && (
+                        <div className="flex items-center space-x-2">
+                          <ApperIcon name="Check" size={16} className="text-success" />
+                          <span className="text-sm">3 personalized coaching sessions</span>
                         </div>
                       )}
                       <div className="flex items-center space-x-2">
@@ -530,9 +572,21 @@ return (
                 
                 <div className="flex items-center justify-between mb-6">
                   <div className="text-sm text-gray-600">
-                    Value: <span className="line-through">${(selectedPack.promptCount * 2.99).toFixed(2)}</span>
+                    {selectedPack.tier === 'compresslearn' ? (
+                      <>Individual Value: <span className="line-through">${selectedPack.originalPrice}</span></>
+                    ) : (
+                      <>Value: <span className="line-through">${(selectedPack.promptCount * 2.99).toFixed(2)}</span></>
+                    )}
                   </div>
-                  <div className="text-3xl font-bold text-primary">${selectedPack.price}</div>
+                  <div className="text-right">
+                    {selectedPack.originalPrice && selectedPack.originalPrice > selectedPack.price && (
+                      <div className="text-sm text-gray-500 line-through">${selectedPack.originalPrice}</div>
+                    )}
+                    <div className="text-3xl font-bold text-primary">${selectedPack.price}</div>
+                    {selectedPack.bundleDiscount && (
+                      <div className="text-sm text-green-600 font-medium">Save {selectedPack.bundleDiscount}%!</div>
+                    )}
+                  </div>
                 </div>
               </div>
               
@@ -548,7 +602,7 @@ return (
                   onClick={() => handlePurchase(selectedPack, true)}
                   disabled={purchasing}
                   className="flex-1"
-                  variant={selectedPack.tier === 'premium' ? 'accent' : 'primary'}
+                  variant={selectedPack.tier === 'compresslearn' ? 'warning' : selectedPack.tier === 'premium' ? 'accent' : 'primary'}
                 >
                   {purchasing ? (
                     <>
@@ -558,7 +612,7 @@ return (
                   ) : (
                     <>
                       <ApperIcon name="CreditCard" size={16} className="mr-2" />
-                      Purchase Pack
+                      {selectedPack.tier === 'compresslearn' ? 'Get Bundle' : 'Purchase Pack'}
                     </>
                   )}
                 </Button>
