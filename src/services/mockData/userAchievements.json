@@ -1,0 +1,35 @@
+[
+  {
+    "userId": "1",
+    "achievementId": 1,
+    "earned": true,
+    "earnedDate": "2024-01-15T00:00:00.000Z",
+    "progress": 100
+  },
+  {
+    "userId": "1",
+    "achievementId": 2,
+    "earned": true,
+    "earnedDate": "2024-01-20T00:00:00.000Z",
+    "progress": 100
+  },
+  {
+    "userId": "1",
+    "achievementId": 3,
+    "earned": false,
+    "progress": 60
+  },
+  {
+    "userId": "1",
+    "achievementId": 4,
+    "earned": false,
+    "progress": 30
+  },
+  {
+    "userId": "1",
+    "achievementId": 5,
+    "earned": true,
+    "earnedDate": "2024-01-18T00:00:00.000Z",
+    "progress": 100
+  }
+]

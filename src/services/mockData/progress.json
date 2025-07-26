@@ -1,0 +1,44 @@
+[
+  {
+    "userId": "1",
+    "date": "2024-01-15T00:00:00.000Z",
+    "category": "Overall",
+    "score": 650,
+    "improvement": 0
+  },
+  {
+    "userId": "1",
+    "date": "2024-01-16T00:00:00.000Z",
+    "category": "Overall",
+    "score": 675,
+    "improvement": 25
+  },
+  {
+    "userId": "1",
+    "date": "2024-01-17T00:00:00.000Z",
+    "category": "Overall",
+    "score": 700,
+    "improvement": 25
+  },
+  {
+    "userId": "1",
+    "date": "2024-01-18T00:00:00.000Z",
+    "category": "Overall",
+    "score": 720,
+    "improvement": 20
+  },
+  {
+    "userId": "1",
+    "date": "2024-01-19T00:00:00.000Z",
+    "category": "Overall",
+    "score": 760,
+    "improvement": 40
+  },
+  {
+    "userId": "1",
+    "date": "2024-01-20T00:00:00.000Z",
+    "category": "Overall",
+    "score": 785,
+    "improvement": 25
+  }
+]

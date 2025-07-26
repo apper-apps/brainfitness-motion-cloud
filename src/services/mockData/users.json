@@ -1,0 +1,13 @@
+[
+  {
+    "Id": 1,
+    "email": "trainer@brainfit.ai",
+    "displayName": "Brain Trainer",
+    "isPremium": false,
+    "joinDate": "2024-01-15T00:00:00.000Z",
+    "currentStreak": 7,
+    "longestStreak": 21,
+    "totalWorkouts": 42,
+    "mentalFitnessScore": 785
+  }
+]

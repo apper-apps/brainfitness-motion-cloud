@@ -1,0 +1,82 @@
+[
+  {
+    "Id": 1,
+    "name": "First Steps",
+    "description": "Complete your first brain training exercise",
+    "icon": "Play",
+    "requirement": {"type": "exercises_completed", "count": 1},
+    "points": 10
+  },
+  {
+    "Id": 2,
+    "name": "Week Warrior",
+    "description": "Maintain a 7-day training streak",
+    "icon": "Flame",
+    "requirement": {"type": "streak", "count": 7},
+    "points": 50
+  },
+  {
+    "Id": 3,
+    "name": "Memory Master",
+    "description": "Score 90%+ on 5 memory exercises",
+    "icon": "Brain",
+    "requirement": {"type": "category_score", "category": "Memory", "count": 5, "score": 90},
+    "points": 75
+  },
+  {
+    "Id": 4,
+    "name": "Speed Demon",
+    "description": "Complete 10 speed exercises",
+    "icon": "Zap",
+    "requirement": {"type": "category_exercises", "category": "Speed", "count": 10},
+    "points": 60
+  },
+  {
+    "Id": 5,
+    "name": "Perfect Focus",
+    "description": "Score 100% on a focus training exercise",
+    "icon": "Target",
+    "requirement": {"type": "perfect_score", "category": "Focus"},
+    "points": 100
+  },
+  {
+    "Id": 6,
+    "name": "Pattern Pro",
+    "description": "Master all pattern recognition exercises",
+    "icon": "Grid3x3",
+    "requirement": {"type": "category_mastery", "category": "Pattern"},
+    "points": 125
+  },
+  {
+    "Id": 7,
+    "name": "Logic Legend",
+    "description": "Complete 15 logic exercises",
+    "icon": "Puzzle",
+    "requirement": {"type": "category_exercises", "category": "Logic", "count": 15},
+    "points": 80
+  },
+  {
+    "Id": 8,
+    "name": "Consistency King",
+    "description": "Train for 30 consecutive days",
+    "icon": "Crown",
+    "requirement": {"type": "streak", "count": 30},
+    "points": 200
+  },
+  {
+    "Id": 9,
+    "name": "Score Crusher",
+    "description": "Achieve a mental fitness score of 1000",
+    "icon": "Trophy",
+    "requirement": {"type": "total_score", "score": 1000},
+    "points": 150
+  },
+  {
+    "Id": 10,
+    "name": "Well Rounded",
+    "description": "Complete exercises in all categories",
+    "icon": "Award",
+    "requirement": {"type": "all_categories"},
+    "points": 100
+  }
+]

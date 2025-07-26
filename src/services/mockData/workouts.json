@@ -1,0 +1,15 @@
+[
+  {
+    "Id": 1,
+    "userId": "1",
+    "date": "2024-01-20T00:00:00.000Z",
+    "exercises": [
+      {"Id": 1, "name": "Memory Match", "category": "Memory", "completed": true},
+      {"Id": 3, "name": "Focus Training", "category": "Focus", "completed": true},
+      {"Id": 9, "name": "Number Sequence", "category": "Pattern", "completed": false}
+    ],
+    "duration": 12,
+    "score": 850,
+    "completed": false
+  }
+]

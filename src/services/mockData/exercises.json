@@ -1,0 +1,92 @@
+[
+  {
+    "Id": 1,
+    "name": "Memory Match",
+    "category": "Memory",
+    "difficulty": 1,
+    "isPremium": false,
+    "description": "Match pairs of cards to improve your visual memory and concentration skills.",
+    "averageTime": 3
+  },
+  {
+    "Id": 2,
+    "name": "Pattern Recognition",
+    "category": "Pattern",
+    "difficulty": 2,
+    "isPremium": false,
+    "description": "Identify and complete complex patterns to enhance pattern recognition abilities.",
+    "averageTime": 4
+  },
+  {
+    "Id": 3,
+    "name": "Focus Training",
+    "category": "Focus",
+    "difficulty": 2,
+    "isPremium": false,
+    "description": "Maintain focus on target elements while ignoring distractions.",
+    "averageTime": 5
+  },
+  {
+    "Id": 4,
+    "name": "Speed Math",
+    "category": "Speed",
+    "difficulty": 3,
+    "isPremium": true,
+    "description": "Solve mathematical problems quickly to boost mental calculation speed.",
+    "averageTime": 2
+  },
+  {
+    "Id": 5,
+    "name": "Word Puzzles",
+    "category": "Logic",
+    "difficulty": 2,
+    "isPremium": false,
+    "description": "Solve word-based puzzles to improve vocabulary and linguistic reasoning.",
+    "averageTime": 6
+  },
+  {
+    "Id": 6,
+    "name": "Spatial Reasoning",
+    "category": "Logic",
+    "difficulty": 3,
+    "isPremium": true,
+    "description": "Manipulate 3D objects mentally to enhance spatial intelligence.",
+    "averageTime": 4
+  },
+  {
+    "Id": 7,
+    "name": "Working Memory",
+    "category": "Memory",
+    "difficulty": 3,
+    "isPremium": true,
+    "description": "Hold and manipulate information in your mind simultaneously.",
+    "averageTime": 5
+  },
+  {
+    "Id": 8,
+    "name": "Attention Switch",
+    "category": "Focus",
+    "difficulty": 2,
+    "isPremium": false,
+    "description": "Switch attention between different tasks to improve cognitive flexibility.",
+    "averageTime": 4
+  },
+  {
+    "Id": 9,
+    "name": "Number Sequence",
+    "category": "Pattern",
+    "difficulty": 1,
+    "isPremium": false,
+    "description": "Complete number sequences to enhance logical reasoning skills.",
+    "averageTime": 3
+  },
+  {
+    "Id": 10,
+    "name": "Reaction Time",
+    "category": "Speed",
+    "difficulty": 1,
+    "isPremium": false,
+    "description": "Test and improve your reaction time with visual and auditory stimuli.",
+    "averageTime": 2
+  }
+]

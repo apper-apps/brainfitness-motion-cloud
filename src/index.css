@@ -1,0 +1,109 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import 'react-toastify/dist/ReactToastify.css';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #F8F9FB;
+}
+
+/* Toast Customization */
+.Toastify__toast-container {
+  width: 320px;
+  padding: 4px;
+}
+
+.Toastify__toast {
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(135deg, #F44336, #d32f2f);
+}
+
+.Toastify__toast--info {
+  background: linear-gradient(135deg, #2196F3, #1976d2);
+}
+
+.Toastify__toast--warning {
+  background: linear-gradient(135deg, #FF9800, #f57c00);
+}
+
+/* Custom Progress Ring Animation */
+@keyframes progress-ring {
+  0% {
+    stroke-dasharray: 0 628;
+  }
+  100% {
+    stroke-dasharray: 628 628;
+  }
+}
+
+.progress-ring-circle {
+  transition: stroke-dasharray 0.35s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* Achievement Badge Glow */
+.badge-glow {
+  animation: badge-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes badge-glow {
+  from {
+    box-shadow: 0 0 20px rgba(255, 181, 71, 0.4);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(255, 181, 71, 0.7);
+  }
+}
+
+/* Streak Flame Animation */
+.streak-flame {
+  animation: streak-flame 1.5s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 10px rgba(255, 181, 71, 0.5));
+}
+
+/* Focus Ring for Accessibility */
+.focus-ring:focus {
+  outline: 2px solid #5B4CDB;
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #5B4CDB, #8B7FE8);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #4a3cc4, #7a6fdf);
+}
