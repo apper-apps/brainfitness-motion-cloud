@@ -1,33 +1,158 @@
-import exercisesData from "@/services/mockData/exercises.json";
+import { toast } from "react-toastify";
+import React from "react";
 
 class ExerciseService {
   constructor() {
-    this.exercises = [...exercisesData];
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'exercise';
   }
 
-  async getAll() {
-    await this.delay();
-    return [...this.exercises];
-  }
+async getAll() {
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "category" } },
+          { field: { Name: "difficulty" } },
+          { field: { Name: "isPremium" } },
+          { field: { Name: "description" } },
+          { field: { Name: "averageTime" } }
+        ]
+      };
 
-  async getById(id) {
-    await this.delay();
-    const exercise = this.exercises.find(ex => ex.Id === id);
-    if (!exercise) {
-      throw new Error("Exercise not found");
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error fetching exercises:", response.message);
+        toast.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching exercises:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return [];
     }
-    return { ...exercise };
   }
 
-  async getRecommendedExercises() {
-    await this.delay();
-    // Return a mix of free exercises for quick access
-    return this.exercises.filter(ex => !ex.isPremium).slice(0, 6);
+async getById(id) {
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "category" } },
+          { field: { Name: "difficulty" } },
+          { field: { Name: "isPremium" } },
+          { field: { Name: "description" } },
+          { field: { Name: "averageTime" } }
+        ]
+      };
+
+      const response = await this.apperClient.getRecordById(this.tableName, id, params);
+      
+      if (!response.success) {
+        console.error(`Error fetching exercise with ID ${id}:`, response.message);
+        toast.error(response.message);
+        return null;
+      }
+
+      return response.data;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error(`Error fetching exercise with ID ${id}:`, error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return null;
+    }
+  }
+
+async getRecommendedExercises() {
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "category" } },
+          { field: { Name: "difficulty" } },
+          { field: { Name: "isPremium" } },
+          { field: { Name: "description" } },
+          { field: { Name: "averageTime" } }
+        ],
+        where: [
+          {
+            FieldName: "isPremium",
+            Operator: "EqualTo",
+            Values: [false]
+          }
+        ],
+        pagingInfo: { limit: 6, offset: 0 }
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error fetching recommended exercises:", response.message);
+        toast.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching recommended exercises:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return [];
+return [];
+    }
   }
 
   async getByCategory(category) {
-    await this.delay();
-    return this.exercises.filter(ex => ex.category === category);
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "category" } },
+          { field: { Name: "difficulty" } },
+          { field: { Name: "isPremium" } },
+          { field: { Name: "description" } },
+          { field: { Name: "averageTime" } }
+        ],
+        where: [
+          {
+            FieldName: "category",
+            Operator: "EqualTo",
+            Values: [category]
+          }
+        ]
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(`Error fetching exercises by category ${category}:`, response.message);
+        toast.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error(`Error fetching exercises by category ${category}:`, error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return [];
+    }
   }
 
   delay(ms = 250) {

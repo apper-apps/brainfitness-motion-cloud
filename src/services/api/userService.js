@@ -1,27 +1,67 @@
-import usersData from "@/services/mockData/users.json";
+import { toast } from 'react-toastify';
 class UserService {
   constructor() {
-    this.users = [...usersData];
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'app_User';
   }
 
 async getCurrentUser() {
-    await this.delay();
-    const user = { ...this.users[0] };
-    // Add subscription and readiness data
-    user.subscription = {
-      status: 'trial', // 'trial', 'active', 'canceled', 'expired'
-      plan: 'premium',
-      trialEndsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      billingCycle: 'monthly',
-      nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-    };
-    user.readinessLevels = {
-      mentalClarity: 65,
-      aiTraining: 82,
-      exercises: 73,
-      overall: 73
-    };
-    return user;
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "email" } },
+          { field: { Name: "displayName" } },
+          { field: { Name: "isPremium" } },
+          { field: { Name: "joinDate" } },
+          { field: { Name: "currentStreak" } },
+          { field: { Name: "longestStreak" } },
+          { field: { Name: "totalWorkouts" } },
+          { field: { Name: "mentalFitnessScore" } }
+        ],
+        pagingInfo: { limit: 1, offset: 0 }
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error fetching current user:", response.message);
+        toast.error(response.message);
+        return null;
+      }
+
+      if (!response.data || response.data.length === 0) {
+        return null;
+      }
+
+      const user = response.data[0];
+      // Add subscription and readiness data
+      user.subscription = {
+        status: 'trial',
+        plan: 'premium',
+        trialEndsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        billingCycle: 'monthly',
+        nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      };
+      user.readinessLevels = {
+        mentalClarity: 65,
+        aiTraining: 82,
+        exercises: 73,
+        overall: 73
+      };
+      return user;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching current user:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return null;
+    }
   }
 
   // Get user's subscription details
@@ -61,18 +101,75 @@ async getCurrentUser() {
   }
 
 async getCurrentUserStats() {
-    await this.delay();
-    const user = this.users[0];
-    return {
-      mentalFitnessScore: user.mentalFitnessScore,
-      totalWorkouts: user.totalWorkouts,
-      currentStreak: user.currentStreak,
-      longestStreak: user.longestStreak,
-      improvement: 25,
-      thinkingScore: 892,
-      memoryImprovement: 78,
-      weeklyGoalProgress: 71
-    };
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "mentalFitnessScore" } },
+          { field: { Name: "totalWorkouts" } },
+          { field: { Name: "currentStreak" } },
+          { field: { Name: "longestStreak" } }
+        ],
+        pagingInfo: { limit: 1, offset: 0 }
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error fetching user stats:", response.message);
+        toast.error(response.message);
+        return {
+          mentalFitnessScore: 0,
+          totalWorkouts: 0,
+          currentStreak: 0,
+          longestStreak: 0,
+          improvement: 0,
+          thinkingScore: 0,
+          memoryImprovement: 0,
+          weeklyGoalProgress: 0
+        };
+      }
+
+      if (!response.data || response.data.length === 0) {
+        return {
+          mentalFitnessScore: 0,
+          totalWorkouts: 0,
+          currentStreak: 0,
+          longestStreak: 0,
+          improvement: 0,
+          thinkingScore: 0,
+          memoryImprovement: 0,
+          weeklyGoalProgress: 0
+        };
+      }
+
+      const user = response.data[0];
+      return {
+        mentalFitnessScore: user.mentalFitnessScore || 0,
+        totalWorkouts: user.totalWorkouts || 0,
+        currentStreak: user.currentStreak || 0,
+        longestStreak: user.longestStreak || 0,
+        improvement: 25,
+        thinkingScore: 892,
+        memoryImprovement: 78,
+        weeklyGoalProgress: 71
+      };
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching user stats:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return {
+        mentalFitnessScore: 0,
+        totalWorkouts: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        improvement: 0,
+        thinkingScore: 0,
+        memoryImprovement: 0,
+        weeklyGoalProgress: 0
+      };
+    }
   }
 
   async getAnalyticsData() {

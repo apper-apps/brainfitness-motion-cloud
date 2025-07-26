@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { motion } from "framer-motion";
+import { useSelector } from 'react-redux';
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
+import { AuthContext } from "../../App";
 
 const Header = () => {
   const [notifications] = useState([
@@ -25,7 +27,7 @@ const Header = () => {
             </Button>
           </div>
           
-          {/* User Profile */}
+{/* User Profile */}
           <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
             <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
               <ApperIcon name="User" size={20} className="text-white" />
@@ -34,6 +36,17 @@ const Header = () => {
               <p className="text-sm font-medium text-gray-900 font-body">Brain Trainer</p>
               <p className="text-xs text-gray-600">Premium Member</p>
             </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => {
+                const { logout } = useContext(AuthContext);
+                logout();
+              }}
+              className="ml-2"
+            >
+              <ApperIcon name="LogOut" size={16} />
+            </Button>
           </div>
         </div>
       </div>

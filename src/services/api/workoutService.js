@@ -1,42 +1,112 @@
-import workoutsData from "@/services/mockData/workouts.json";
+import { toast } from 'react-toastify';
 import { exerciseService } from "./exerciseService";
 
 class WorkoutService {
   constructor() {
-    this.workouts = [...workoutsData];
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'workout';
   }
 
-  async getTodayWorkout() {
-    await this.delay();
-    const today = new Date().toISOString().split("T")[0];
-    const todayWorkout = this.workouts.find(workout => 
-      workout.date.split("T")[0] === today
-    );
-    return todayWorkout ? { ...todayWorkout } : null;
+async getTodayWorkout() {
+    try {
+      const today = new Date().toISOString().split("T")[0];
+      
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "date" } },
+          { field: { Name: "duration" } },
+          { field: { Name: "score" } },
+          { field: { Name: "completed" } },
+          { field: { Name: "userId" } }
+        ],
+        where: [
+          {
+            FieldName: "date",
+            Operator: "Contains",
+            Values: [today]
+          }
+        ],
+        pagingInfo: { limit: 1, offset: 0 }
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error fetching today's workout:", response.message);
+        return null;
+      }
+
+      return response.data && response.data.length > 0 ? response.data[0] : null;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching today's workout:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return null;
+    }
   }
 
-  async createDailyWorkout() {
-    await this.delay();
-    const exercises = await exerciseService.getRecommendedExercises();
-    const selectedExercises = exercises.slice(0, 3).map(ex => ({
-      Id: ex.Id,
-      name: ex.name,
-      category: ex.category,
-      completed: false
-    }));
+async createDailyWorkout() {
+    try {
+      const exercises = await exerciseService.getRecommendedExercises();
+      
+      const workoutData = {
+        Name: `Daily Workout - ${new Date().toLocaleDateString()}`,
+        date: new Date().toISOString(),
+        duration: 0,
+        score: 0,
+        completed: false,
+        userId: 1 // Current user ID
+      };
 
-    const newWorkout = {
-      Id: this.getNextId(),
-      userId: "1",
-      date: new Date().toISOString(),
-      exercises: selectedExercises,
-      duration: 0,
-      score: 0,
-      completed: false
-    };
+      const params = {
+        records: [workoutData]
+      };
 
-    this.workouts.push(newWorkout);
-    return { ...newWorkout };
+      const response = await this.apperClient.createRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error creating daily workout:", response.message);
+        toast.error(response.message);
+        return null;
+      }
+
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success);
+        const failedRecords = response.results.filter(result => !result.success);
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create workout ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
+          
+          failedRecords.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`);
+            });
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        if (successfulRecords.length > 0) {
+          toast.success("Daily workout created successfully!");
+          return successfulRecords[0].data;
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error creating daily workout:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return null;
+    }
   }
 
 async recordExerciseCompletion(exerciseId, score) {

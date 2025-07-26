@@ -1,19 +1,23 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import { userService } from "@/services/api/userService";
+import { workoutService } from "@/services/api/workoutService";
+import { promptService } from "@/services/api/promptService";
+import { exerciseService } from "@/services/api/exerciseService";
 import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
-import Card from "@/components/atoms/Card";
-import StatCard from "@/components/molecules/StatCard";
 import ProgressRing from "@/components/molecules/ProgressRing";
+import StatCard from "@/components/molecules/StatCard";
 import StreakCounter from "@/components/molecules/StreakCounter";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
-import { userService } from "@/services/api/userService";
-import { workoutService } from "@/services/api/workoutService";
-import { exerciseService } from "@/services/api/exerciseService";
-import { promptService } from "@/services/api/promptService";
+import Progress from "@/components/pages/Progress";
+import Community from "@/components/pages/Community";
+import Achievements from "@/components/pages/Achievements";
+import Exercises from "@/components/pages/Exercises";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 const Dashboard = () => {
   const navigate = useNavigate();
 const [userStats, setUserStats] = useState(null);
@@ -39,10 +43,11 @@ const loadDashboardData = async () => {
       
       setUserStats(stats);
       setTodayWorkout(workout);
-      setRecommendedExercises(exercises);
+      setRecommendedExercises(exercises || []);
       setAnalyticsData(analytics);
-      setPersonalizedRecommendations(recommendations);
+      setPersonalizedRecommendations(recommendations || []);
     } catch (err) {
+      console.error("Error loading dashboard data:", err);
       setError("Failed to load dashboard data");
     } finally {
       setLoading(false);

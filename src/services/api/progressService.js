@@ -1,25 +1,72 @@
-import progressData from "@/services/mockData/progress.json";
-import { subDays, format } from "date-fns";
+import { toast } from "react-toastify";
+import { format, subDays } from "date-fns";
+import React from "react";
 
 class ProgressService {
   constructor() {
-    this.progress = [...progressData];
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'progress';
   }
 
-  async getProgressHistory(days = 30) {
-    await this.delay();
-    const endDate = new Date();
-    const startDate = subDays(endDate, days);
-    
-    return this.progress
-      .filter(p => {
-        const progressDate = new Date(p.date);
-        return progressDate >= startDate && progressDate <= endDate;
-      })
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
+async getProgressHistory(days = 30) {
+    try {
+      const endDate = new Date();
+      const startDate = subDays(endDate, days);
+      
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "date" } },
+          { field: { Name: "category" } },
+          { field: { Name: "score" } },
+          { field: { Name: "improvement" } },
+          { field: { Name: "userId" } }
+        ],
+        where: [
+          {
+            FieldName: "date",
+            Operator: "GreaterThanOrEqualTo",
+            Values: [startDate.toISOString()]
+          },
+          {
+            FieldName: "date",
+            Operator: "LessThanOrEqualTo", 
+            Values: [endDate.toISOString()]
+          }
+        ],
+        orderBy: [
+          {
+            fieldName: "date",
+            sorttype: "ASC"
+          }
+        ]
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error fetching progress history:", response.message);
+        toast.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching progress history:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return [];
+return [];
+    }
   }
 
-async getOverallStats() {
+  async getOverallStats() {
     await this.delay();
     const latestProgress = this.progress[this.progress.length - 1];
     

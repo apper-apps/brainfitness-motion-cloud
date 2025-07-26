@@ -1,14 +1,13 @@
-import { toast } from "react-toastify";
-import React from "react";
+import { toast } from 'react-toastify';
 
-class AchievementService {
+class ForumService {
   constructor() {
     const { ApperClient } = window.ApperSDK;
     this.apperClient = new ApperClient({
       apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
       apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-});
-    this.tableName = 'achievement';
+    });
+    this.tableName = 'forum';
   }
 
   async getAll() {
@@ -18,14 +17,18 @@ class AchievementService {
           { field: { Name: "Name" } },
           { field: { Name: "description" } },
           { field: { Name: "icon" } },
-          { field: { Name: "points" } }
+          { field: { Name: "color" } },
+          { field: { Name: "postCount" } },
+          { field: { Name: "memberCount" } },
+          { field: { Name: "lastActivity" } },
+          { field: { Name: "lastPost" } }
         ]
       };
 
       const response = await this.apperClient.fetchRecords(this.tableName, params);
       
       if (!response.success) {
-        console.error("Error fetching achievements:", response.message);
+        console.error("Error fetching forums:", response.message);
         toast.error(response.message);
         return [];
       }
@@ -33,12 +36,12 @@ class AchievementService {
       return response.data || [];
     } catch (error) {
       if (error?.response?.data?.message) {
-        console.error("Error fetching achievements:", error?.response?.data?.message);
+        console.error("Error fetching forums:", error?.response?.data?.message);
       } else {
         console.error(error.message);
       }
       return [];
-}
+    }
   }
 
   async getById(id) {
@@ -48,14 +51,18 @@ class AchievementService {
           { field: { Name: "Name" } },
           { field: { Name: "description" } },
           { field: { Name: "icon" } },
-          { field: { Name: "points" } }
+          { field: { Name: "color" } },
+          { field: { Name: "postCount" } },
+          { field: { Name: "memberCount" } },
+          { field: { Name: "lastActivity" } },
+          { field: { Name: "lastPost" } }
         ]
       };
 
       const response = await this.apperClient.getRecordById(this.tableName, id, params);
       
       if (!response.success) {
-        console.error(`Error fetching achievement with ID ${id}:`, response.message);
+        console.error(`Error fetching forum with ID ${id}:`, response.message);
         toast.error(response.message);
         return null;
       }
@@ -63,34 +70,12 @@ class AchievementService {
       return response.data;
     } catch (error) {
       if (error?.response?.data?.message) {
-        console.error(`Error fetching achievement with ID ${id}:`, error?.response?.data?.message);
+        console.error(`Error fetching forum with ID ${id}:`, error?.response?.data?.message);
       } else {
         console.error(error.message);
       }
       return null;
-}
-  }
-
-  async getUserAchievements() {
-    await this.delay();
-    return [...this.userAchievements];
-  }
-
-  async getEarnedAchievements() {
-    await this.delay();
-    const earned = this.userAchievements.filter(ua => ua.earned);
-    return earned.map(ua => {
-      const achievement = this.achievements.find(a => a.Id === ua.achievementId);
-      return { ...achievement, earnedDate: ua.earnedDate };
-    });
-  }
-
-  async checkAndUnlockAchievements(userStats) {
-    await this.delay();
-    // In a real app, this would check user stats against achievement requirements
-    // and unlock new achievements
-    const newAchievements = [];
-    return newAchievements;
+    }
   }
 
   delay(ms = 250) {
@@ -98,4 +83,4 @@ class AchievementService {
   }
 }
 
-export const achievementService = new AchievementService();
+export const forumService = new ForumService();
