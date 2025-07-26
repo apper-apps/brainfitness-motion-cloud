@@ -23,20 +23,32 @@ class UserService {
   }
 
   async getUserSettings() {
-    await this.delay();
+await this.delay();
     return {
       notifications: true,
       dailyReminders: true,
       streakAlerts: true,
       soundEffects: true,
       darkMode: false,
-      difficultyLevel: "adaptive"
+      difficultyLevel: "adaptive",
+      newsletter: {
+        enabled: false,
+        frequency: "weekly",
+        series: [],
+        workoutIntegration: true,
+        emailTime: "09:00"
+      }
     };
   }
 
-  async updateSettings(settings) {
+async updateSettings(settings) {
     await this.delay();
     // In a real app, this would save to a database
+    // Handle newsletter preferences and validate series selections
+    if (settings.newsletter) {
+      const validSeries = ['mba', 'tech', 'finance', 'psychology', 'productivity', 'health'];
+      settings.newsletter.series = settings.newsletter.series.filter(s => validSeries.includes(s));
+    }
     return settings;
   }
 
