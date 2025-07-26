@@ -63,6 +63,76 @@ async recordExerciseCompletion(exerciseId, score) {
 
   delay(ms = 300) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+  // Calculate readiness level based on workout completion
+  async calculateReadinessLevel(category = 'overall') {
+    await this.delay();
+    
+    // Get user's workout history (mock data)
+    const completedWorkouts = 15;
+    const totalWorkouts = 20;
+    const completionRate = (completedWorkouts / totalWorkouts) * 100;
+    
+    // Calculate readiness based on completion rate
+    let readinessLevel = Math.min(completionRate, 100);
+    
+    // Apply category-specific modifiers
+    const modifiers = {
+      mentalClarity: 0.9,
+      aiTraining: 1.1,
+      exercises: 1.0,
+      overall: 1.0
+    };
+    
+    readinessLevel *= modifiers[category] || 1.0;
+    return Math.round(Math.min(readinessLevel, 100));
+  }
+
+  // Check if user has access to premium courses (80% readiness required)
+  async checkCourseAccess(courseCategory) {
+    await this.delay();
+    const readinessLevel = await this.calculateReadinessLevel(courseCategory);
+    return {
+      hasAccess: readinessLevel >= 80,
+      readinessLevel,
+      requiredLevel: 80,
+      remaining: Math.max(0, 80 - readinessLevel)
+    };
+  }
+
+  // Get detailed readiness analytics
+  async getReadinessAnalytics() {
+    await this.delay();
+    
+    const categories = ['mentalClarity', 'aiTraining', 'exercises'];
+    const analytics = {};
+    
+    for (const category of categories) {
+      const level = await this.calculateReadinessLevel(category);
+      analytics[category] = {
+        level,
+        hasAccess: level >= 80,
+        weeklyProgress: Math.random() * 10 + 5, // Mock weekly progress
+        completedSessions: Math.floor(level / 5),
+        totalSessions: 20
+      };
+    }
+    
+    // Calculate overall readiness
+    const overallLevel = Math.round(
+      Object.values(analytics).reduce((sum, cat) => sum + cat.level, 0) / categories.length
+    );
+    
+    analytics.overall = {
+      level: overallLevel,
+      hasAccess: overallLevel >= 80,
+      weeklyProgress: Object.values(analytics).reduce((sum, cat) => sum + cat.weeklyProgress, 0) / categories.length,
+      completedSessions: Object.values(analytics).reduce((sum, cat) => sum + cat.completedSessions, 0),
+      totalSessions: Object.values(analytics).reduce((sum, cat) => sum + cat.totalSessions, 0)
+    };
+    
+    return analytics;
   }
 }
 

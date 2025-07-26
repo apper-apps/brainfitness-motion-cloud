@@ -5,9 +5,60 @@ class UserService {
     this.users = [...usersData];
   }
 
-  async getCurrentUser() {
+async getCurrentUser() {
     await this.delay();
-    return this.users[0]; // Return first user as current user
+    const user = { ...this.users[0] };
+    // Add subscription and readiness data
+    user.subscription = {
+      status: 'trial', // 'trial', 'active', 'canceled', 'expired'
+      plan: 'premium',
+      trialEndsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      billingCycle: 'monthly',
+      nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    };
+    user.readinessLevels = {
+      mentalClarity: 65,
+      aiTraining: 82,
+      exercises: 73,
+      overall: 73
+    };
+    return user;
+  }
+
+  // Get user's subscription details
+  async getUserSubscription() {
+    await this.delay();
+    const user = await this.getCurrentUser();
+    return user.subscription;
+  }
+
+  // Get user's readiness levels for course access
+  async getUserReadiness() {
+    await this.delay();
+    const user = await this.getCurrentUser();
+    return user.readinessLevels;
+  }
+
+  // Update subscription status
+  async updateSubscription(subscriptionData) {
+    await this.delay();
+    // In real app, this would update the database
+    return { success: true, subscription: subscriptionData };
+  }
+
+  // Apply discount code
+  async applyDiscountCode(code) {
+    await this.delay();
+    const validCodes = {
+      'BUNDLE10': { discount: 10, type: 'percentage', description: '10% off bundled plans' },
+      'TRIAL7': { discount: 7, type: 'days', description: 'Extended 7-day trial' },
+      'WELCOME20': { discount: 20, type: 'percentage', description: '20% off first month' }
+    };
+    
+    if (validCodes[code]) {
+      return { success: true, discount: validCodes[code] };
+    }
+    return { success: false, error: 'Invalid discount code' };
   }
 
 async getCurrentUserStats() {
@@ -127,4 +178,5 @@ async updateSettings(settings) {
   }
 }
 
+export const userService = new UserService();
 export const userService = new UserService();

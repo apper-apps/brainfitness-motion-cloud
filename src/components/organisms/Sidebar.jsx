@@ -18,6 +18,7 @@ const navigationItems = [
     { name: "Community", path: "/community", icon: "Users" },
     { name: "Progress", path: "/progress", icon: "TrendingUp" },
     { name: "Achievements", path: "/achievements", icon: "Award" },
+    { name: "Subscription", path: "/subscription", icon: "CreditCard" },
     { name: "Settings", path: "/settings", icon: "Settings" }
   ];
   
@@ -60,18 +61,30 @@ const navigationItems = [
         </ul>
       </nav>
       
-      {/* Premium Upgrade */}
+{/* Subscription Status */}
       <div className="p-4">
-        <div className="bg-gradient-to-br from-accent/10 to-warning/10 rounded-xl p-4 border border-accent/20">
-          <div className="flex items-center space-x-2 mb-2">
-            <ApperIcon name="Crown" size={20} className="text-accent" />
-            <h3 className="font-display font-bold text-gray-900">Go Premium</h3>
+        <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-xl p-4 border border-primary/20">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center space-x-2">
+              <ApperIcon name="Crown" size={20} className="text-primary" />
+              <h3 className="font-display font-bold text-gray-900">Premium Trial</h3>
+            </div>
+            <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
           </div>
-          <p className="text-sm text-gray-600 font-body mb-3">
-            Unlock unlimited exercises and advanced analytics
+          <p className="text-sm text-gray-600 font-body mb-2">
+            6 days remaining
           </p>
-          <Button variant="accent" size="sm" className="w-full">
-            Upgrade Now
+          <div className="flex items-center space-x-2 mb-3">
+            <div className="flex-1 bg-gray-200 rounded-full h-2">
+              <div className="bg-gradient-to-r from-primary to-secondary h-2 rounded-full" style={{width: '73%'}}></div>
+            </div>
+            <span className="text-xs font-medium text-gray-600">73%</span>
+          </div>
+          <p className="text-xs text-gray-500 font-body mb-3">
+            Complete 80% of workouts to unlock premium courses
+          </p>
+          <Button variant="primary" size="sm" className="w-full">
+            Manage Subscription
           </Button>
         </div>
       </div>

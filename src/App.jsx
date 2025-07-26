@@ -12,6 +12,8 @@ import MentalClarityTrainer from "@/components/pages/MentalClarityTrainer";
 import PromptMarketplace from "@/components/pages/PromptMarketplace";
 import SellerDashboard from "@/components/pages/SellerDashboard";
 import Community from "@/components/pages/Community";
+import Subscription from "@/components/pages/Subscription";
+
 function App() {
   return (
     <>
@@ -27,6 +29,7 @@ function App() {
           <Route path="community" element={<Community />} />
           <Route path="progress" element={<Progress />} />
           <Route path="achievements" element={<Achievements />} />
+          <Route path="subscription" element={<Subscription />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
