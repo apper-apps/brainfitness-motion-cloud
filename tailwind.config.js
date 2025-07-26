@@ -5,11 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
+extend: {
       fontFamily: {
-        'display': ['Open Sans', 'sans-serif'],
-        'body': ['Manrope', 'sans-serif'],
-        'cta': ['Inter', 'sans-serif'],
+        'display': ['Inter', 'sans-serif'],
+        'body': ['Inter', 'sans-serif'],
+        'cta': ['Manrope', 'sans-serif'],
       },
       colors: {
         primary: '#5B4CDB',

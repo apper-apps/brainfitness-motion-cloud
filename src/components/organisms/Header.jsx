@@ -12,17 +12,8 @@ const Header = () => {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <h2 className="text-2xl font-bold text-gray-900 font-display">
-            Welcome back! Ready to train your brain?
-          </h2>
-          <p className="text-gray-600 font-body mt-1">
-            Keep up your streak and challenge yourself today
-          </p>
-        </div>
-        
+{/* Right side - Notifications and Profile */}
         <div className="flex items-center space-x-4">
-          {/* Notifications */}
           <div className="relative">
             <Button variant="ghost" size="sm" className="relative">
               <ApperIcon name="Bell" size={20} />
