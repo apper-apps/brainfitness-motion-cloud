@@ -8,9 +8,10 @@ const Sidebar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
   
-  const navigationItems = [
+const navigationItems = [
     { name: "Dashboard", path: "/", icon: "LayoutDashboard" },
     { name: "Exercises", path: "/exercises", icon: "Brain" },
+    { name: "AI Trainer", path: "/ai-trainer", icon: "Zap" },
     { name: "Progress", path: "/progress", icon: "TrendingUp" },
     { name: "Achievements", path: "/achievements", icon: "Award" },
     { name: "Settings", path: "/settings", icon: "Settings" }

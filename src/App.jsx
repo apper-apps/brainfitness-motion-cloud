@@ -7,15 +7,17 @@ import ExerciseGame from "@/components/pages/ExerciseGame";
 import Progress from "@/components/pages/Progress";
 import Achievements from "@/components/pages/Achievements";
 import Settings from "@/components/pages/Settings";
+import DailyAIThinkingTrainer from "@/components/pages/DailyAIThinkingTrainer";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Layout />}>
+<Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="exercises" element={<Exercises />} />
           <Route path="exercise/:id" element={<ExerciseGame />} />
+          <Route path="ai-trainer" element={<DailyAIThinkingTrainer />} />
           <Route path="progress" element={<Progress />} />
           <Route path="achievements" element={<Achievements />} />
           <Route path="settings" element={<Settings />} />
