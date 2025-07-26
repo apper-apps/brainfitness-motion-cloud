@@ -12,6 +12,7 @@ const navigationItems = [
     { name: "Dashboard", path: "/", icon: "LayoutDashboard" },
     { name: "Exercises", path: "/exercises", icon: "Brain" },
     { name: "AI Trainer", path: "/ai-trainer", icon: "Zap" },
+    { name: "Mental Clarity", path: "/clarity-trainer", icon: "Focus" },
     { name: "Progress", path: "/progress", icon: "TrendingUp" },
     { name: "Achievements", path: "/achievements", icon: "Award" },
     { name: "Settings", path: "/settings", icon: "Settings" }

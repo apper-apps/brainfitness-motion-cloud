@@ -87,14 +87,259 @@ const feedbackTemplates = [
   }
 ];
 
+// Mental Clarity Breathing Exercises
+const breathingExercises = [
+  {
+    Id: 1,
+    name: "4-7-8 Breathing",
+    description: "Classic relaxation technique for instant calm",
+    duration: 120, // 2 minutes
+    type: "basic",
+    instructions: [
+      "Inhale through your nose for 4 counts",
+      "Hold your breath for 7 counts", 
+      "Exhale through your mouth for 8 counts",
+      "Repeat this cycle 4 times"
+    ],
+    isPremium: false
+  },
+  {
+    Id: 2,
+    name: "Box Breathing",
+    description: "Navy SEAL technique for focus and control",
+    duration: 120,
+    type: "focus",
+    instructions: [
+      "Inhale for 4 counts",
+      "Hold for 4 counts",
+      "Exhale for 4 counts", 
+      "Hold empty for 4 counts",
+      "Continue for 2 minutes"
+    ],
+    isPremium: false
+  },
+  {
+    Id: 3,
+    name: "Progressive Focus Reset",
+    description: "Advanced technique with body awareness",
+    duration: 120,
+    type: "advanced",
+    instructions: [
+      "Take 3 deep breaths to center yourself",
+      "Focus on different body parts with each breath",
+      "Tense and release muscle groups progressively",
+      "End with 30 seconds of mindful breathing"
+    ],
+    isPremium: true
+  },
+  {
+    Id: 4,
+    name: "Energy Boost Breathing",
+    description: "Quick energizer for mental fatigue",
+    duration: 90,
+    type: "energizing",
+    instructions: [
+      "Take 10 quick, shallow breaths",
+      "Follow with 5 deep, slow breaths",
+      "Repeat sequence twice",
+      "End with natural breathing rhythm"
+    ],
+    isPremium: true
+  }
+];
+
 class PromptService {
   constructor() {
     this.scenarios = [...businessScenarios];
     this.workoutSessions = this.loadWorkoutSessions();
     this.conversations = this.loadConversations();
+    this.clarityExercises = [...breathingExercises];
+    this.claritySessions = this.loadClaritySessions();
+    this.clarityHistory = this.loadClarityHistory();
   }
 
-  // Workout Session Management
+  // Mental Clarity Session Management
+  async getClarityExercises() {
+    await this.delay();
+    return [...this.clarityExercises];
+  }
+
+  async getClarityExerciseById(id) {
+    await this.delay();
+    const exercise = this.clarityExercises.find(e => e.Id === id);
+    if (!exercise) {
+      throw new Error("Exercise not found");
+    }
+    return { ...exercise };
+  }
+
+  async startClaritySession(exerciseId, isPremium = false) {
+    await this.delay();
+    const exercise = await this.getClarityExerciseById(exerciseId);
+    
+    // Check premium access
+    if (exercise.isPremium && !isPremium) {
+      throw new Error("Premium subscription required for this exercise");
+    }
+
+    const session = {
+      id: Date.now(),
+      exerciseId,
+      exercise,
+      startTime: new Date(),
+      duration: exercise.duration,
+      isActive: true,
+      isPaused: false,
+      timeElapsed: 0,
+      preWorkoutIntent: null,
+      mentalFogLevel: null,
+      postSessionLog: null
+    };
+
+    this.claritySessions.push(session);
+    this.saveClaritySessions();
+    toast.success(`${exercise.name} session started!`);
+    return session;
+  }
+
+  async pauseClaritySession(sessionId) {
+    await this.delay();
+    const session = this.claritySessions.find(s => s.id === sessionId);
+    if (!session || !session.isActive) {
+      throw new Error("Session not found or inactive");
+    }
+
+    session.isPaused = !session.isPaused;
+    this.saveClaritySessions();
+    
+    toast.info(session.isPaused ? "Session paused" : "Session resumed");
+    return session;
+  }
+
+  async updateSessionTime(sessionId, timeElapsed) {
+    const session = this.claritySessions.find(s => s.id === sessionId);
+    if (session && session.isActive) {
+      session.timeElapsed = timeElapsed;
+      this.saveClaritySessions();
+    }
+  }
+
+  async completeClaritySession(sessionId, sessionData) {
+    await this.delay();
+    const session = this.claritySessions.find(s => s.id === sessionId);
+    if (!session) {
+      throw new Error("Session not found");
+    }
+
+    session.isActive = false;
+    session.endTime = new Date();
+    session.preWorkoutIntent = sessionData.preWorkoutIntent;
+    session.mentalFogLevel = sessionData.mentalFogLevel;
+    session.postSessionLog = sessionData.postSessionLog;
+    session.completionScore = this.calculateClarityScore(session, sessionData);
+
+    // Add to history
+    const historyEntry = {
+      Id: this.clarityHistory.length + 1,
+      sessionId: session.id,
+      exerciseName: session.exercise.name,
+      date: new Date(),
+      duration: session.timeElapsed || session.duration,
+      completionScore: session.completionScore,
+      preWorkoutIntent: session.preWorkoutIntent,
+      mentalFogLevel: session.mentalFogLevel,
+      postSessionLog: session.postSessionLog,
+      thinkingScoreImpact: this.calculateThinkingScoreImpact(sessionData)
+    };
+
+    this.clarityHistory.push(historyEntry);
+    this.saveClaritySessions();
+    this.saveClarityHistory();
+
+    toast.success("Clarity session completed! Great work!");
+    return { session, historyEntry };
+  }
+
+  async getClarityHistory() {
+    await this.delay();
+    return [...this.clarityHistory].reverse(); // Most recent first
+  }
+
+  async getClarityStats() {
+    await this.delay();
+    const history = this.clarityHistory;
+    const today = new Date().toDateString();
+    
+    const todaysSessions = history.filter(h => 
+      new Date(h.date).toDateString() === today
+    );
+
+    const weekSessions = history.filter(h => {
+      const sessionDate = new Date(h.date);
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      return sessionDate >= weekAgo;
+    });
+
+    const avgScore = history.length > 0 
+      ? Math.round(history.reduce((sum, h) => sum + h.completionScore, 0) / history.length)
+      : 0;
+
+    const totalSessions = history.length;
+    const currentStreak = this.calculateClarityStreak(history);
+
+    return {
+      todaysSessions: todaysSessions.length,
+      weekSessions: weekSessions.length,
+      avgScore,
+      totalSessions,
+      currentStreak,
+      lastSession: history[0] || null
+    };
+  }
+
+  async getDailyRecommendation(isPremium = false) {
+    await this.delay();
+    const history = this.clarityHistory;
+    const stats = await this.getClarityStats();
+    
+    // Base recommendation on user history
+    let recommendedExercise;
+    
+    if (history.length === 0) {
+      // New user - start with basics
+      recommendedExercise = this.clarityExercises.find(e => e.Id === 1);
+    } else {
+      const recentSessions = history.slice(0, 5);
+      const avgFogLevel = recentSessions.reduce((sum, s) => sum + (s.mentalFogLevel || 3), 0) / recentSessions.length;
+      
+      if (avgFogLevel > 4) {
+        // High fog - recommend energy boost (premium)
+        recommendedExercise = isPremium 
+          ? this.clarityExercises.find(e => e.Id === 4)
+          : this.clarityExercises.find(e => e.Id === 2);
+      } else if (avgFogLevel < 2) {
+        // Low fog - advanced techniques
+        recommendedExercise = isPremium
+          ? this.clarityExercises.find(e => e.Id === 3)
+          : this.clarityExercises.find(e => e.Id === 2);
+      } else {
+        // Medium fog - standard techniques
+        recommendedExercise = this.clarityExercises.find(e => e.Id === 1);
+      }
+    }
+
+    const recommendation = {
+      exercise: recommendedExercise,
+      reason: this.getRecommendationReason(history, stats),
+      urgency: stats.todaysSessions === 0 ? 'high' : 'normal',
+      benefitsText: this.getBenefitsText(recommendedExercise, history)
+    };
+
+    return recommendation;
+  }
+
+  // Existing AI Trainer methods...
   async getScenarios() {
     await this.delay();
     return [...this.scenarios];
@@ -245,7 +490,79 @@ class PromptService {
     return [...this.workoutSessions];
   }
 
-  // Private helper methods
+  // Private helper methods for Mental Clarity
+  calculateClarityScore(session, sessionData) {
+    let score = 70; // Base score
+
+    // Duration completion bonus
+    const completionRatio = (session.timeElapsed || session.duration) / session.duration;
+    score += Math.min(20, completionRatio * 20);
+
+    // Mental fog improvement
+    if (sessionData.mentalFogLevel < 3) score += 10;
+    if (sessionData.mentalFogLevel < 2) score += 5;
+
+    // Pre-workout preparation bonus
+    if (sessionData.preWorkoutIntent) score += 5;
+
+    return Math.min(100, Math.round(score));
+  }
+
+  calculateThinkingScoreImpact(sessionData) {
+    // Simulate thinking score improvement based on clarity session
+    const baseImpact = 2;
+    const fogReduction = Math.max(0, 5 - (sessionData.mentalFogLevel || 3));
+    return baseImpact + fogReduction;
+  }
+
+  calculateClarityStreak(history) {
+    if (!history.length) return 0;
+
+    let streak = 0;
+    const today = new Date();
+    
+    for (let i = 0; i < history.length; i++) {
+      const sessionDate = new Date(history[i].date);
+      const daysDiff = Math.floor((today - sessionDate) / (1000 * 60 * 60 * 24));
+      
+      if (daysDiff === streak) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    
+    return streak;
+  }
+
+  getRecommendationReason(history, stats) {
+    if (stats.todaysSessions === 0) {
+      return "Start your day with a quick focus reset to boost mental clarity";
+    }
+    
+    if (stats.currentStreak > 7) {
+      return "Amazing streak! Try an advanced technique to challenge yourself";
+    }
+    
+    if (stats.avgScore < 75) {
+      return "Build consistency with fundamental breathing techniques";
+    }
+    
+    return "Continue your mental fitness journey with today's recommended exercise";
+  }
+
+  getBenefitsText(exercise, history) {
+    const benefits = {
+      1: "Reduces stress and anxiety, improves focus within minutes",
+      2: "Enhances concentration and mental control, used by professionals",
+      3: "Advanced mind-body connection for deep mental clarity",
+      4: "Quick energy boost and mental fog elimination"
+    };
+    
+    return benefits[exercise.Id] || "Improves mental clarity and focus";
+  }
+
+  // Existing helper methods
   generateFeedback(promptText) {
     const wordCount = promptText.split(' ').length;
     const hasSpecifics = promptText.includes('[') || promptText.toLowerCase().includes('specific');
@@ -323,6 +640,7 @@ class PromptService {
     return responses[Math.floor(Math.random() * responses.length)];
   }
 
+  // Storage methods
   loadWorkoutSessions() {
     const stored = localStorage.getItem('ai-workout-sessions');
     return stored ? JSON.parse(stored) : [];
@@ -339,6 +657,24 @@ class PromptService {
 
   saveConversations() {
     localStorage.setItem('ai-conversations', JSON.stringify(this.conversations));
+  }
+
+  loadClaritySessions() {
+    const stored = localStorage.getItem('clarity-sessions');
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  saveClaritySessions() {
+    localStorage.setItem('clarity-sessions', JSON.stringify(this.claritySessions));
+  }
+
+  loadClarityHistory() {
+    const stored = localStorage.getItem('clarity-history');
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  saveClarityHistory() {
+    localStorage.setItem('clarity-history', JSON.stringify(this.clarityHistory));
   }
 
   delay(ms = 300) {

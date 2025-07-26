@@ -13,7 +13,7 @@ import Error from "@/components/ui/Error";
 import { userService } from "@/services/api/userService";
 import { workoutService } from "@/services/api/workoutService";
 import { exerciseService } from "@/services/api/exerciseService";
-
+import { promptService } from "@/services/api/promptService";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [userStats, setUserStats] = useState(null);
@@ -115,7 +115,7 @@ const Dashboard = () => {
       </div>
       
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Daily Workout Card */}
         <div className="lg:col-span-2">
           <Card className="p-8" gradient>
@@ -184,6 +184,38 @@ const Dashboard = () => {
         
         {/* Streak & Progress */}
         <div className="space-y-6">
+          {/* Mental Clarity Card */}
+          <Card className="p-6 bg-gradient-to-br from-accent/5 to-warning/5 border-accent/20">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-accent to-warning rounded-full flex items-center justify-center">
+                  <ApperIcon name="Focus" size={20} className="text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 font-display">
+                    Mental Clarity
+                  </h3>
+                  <p className="text-sm text-gray-600">2-min focus reset</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-accent">
+                  {Math.floor(Math.random() * 95) + 75}%
+                </div>
+                <div className="text-xs text-gray-600">Today's Score</div>
+              </div>
+            </div>
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              className="w-full bg-gradient-to-r from-accent to-warning text-white hover:from-accent/90 hover:to-warning/90"
+              onClick={() => navigate("/clarity-trainer")}
+            >
+              <ApperIcon name="Sparkles" size={16} className="mr-2" />
+              Start Focus Reset
+            </Button>
+          </Card>
+
           <Card className="p-6">
             <h3 className="text-lg font-bold text-gray-900 font-display mb-4">
               Your Streak
@@ -230,7 +262,6 @@ const Dashboard = () => {
           </Card>
         </div>
       </div>
-      
       {/* Quick Exercise Access */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
